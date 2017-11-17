@@ -205,6 +205,11 @@ public class JOverseerClientProgressMonitor extends AbstractForm implements Prog
 	 */
 	public class ProgressItemRenderer extends DefaultListCellRenderer {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8380977743075389433L;
+
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, hasFocus());

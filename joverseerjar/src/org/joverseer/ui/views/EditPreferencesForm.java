@@ -32,8 +32,13 @@ public class EditPreferencesForm extends ScalableAbstractForm {
 	JPanel panel;
 	HashMap<String, JComponent> components = new HashMap<String, JComponent>();
 
+	String tab;
 	public EditPreferencesForm(FormModel arg0) {
 		super(arg0, FORM_ID);
+	}
+	public EditPreferencesForm(FormModel arg0,String tab) {
+		super(arg0, FORM_ID);
+		this.tab = tab;
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public class EditPreferencesForm extends ScalableAbstractForm {
 
 		PreferenceRegistry reg = (PreferenceRegistry) getFormObject();
 		// sort prefs by group
-		ArrayList<Preference> prefs = reg.getPreferencesSortedByGroup();
+		ArrayList<Preference> prefs = reg.getPreferencesSortedByGroup(this.tab);
 		for (Preference p : prefs) {
 			if (!p.getGroup().equals(group)) {
 				if (tlb != null) {
@@ -105,7 +110,7 @@ public class EditPreferencesForm extends ScalableAbstractForm {
 	public void commit() {
 		super.commit();
 		PreferenceRegistry reg = (PreferenceRegistry) getFormObject();
-		ArrayList<Preference> prefs = reg.getPreferencesSortedByGroup();
+		ArrayList<Preference> prefs = reg.getPreferencesSortedByGroup(this.tab);
 		for (Preference p : prefs) {
 			JComponent c = this.components.get(p.getKey());
 			if (p.getType().equals(Preference.TYPE_DROPDOWN)) {

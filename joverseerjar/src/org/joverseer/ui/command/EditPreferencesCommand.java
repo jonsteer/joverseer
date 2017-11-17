@@ -20,11 +20,13 @@ public class EditPreferencesCommand  extends ActionCommand {
     public EditPreferencesCommand() {
         super("editPreferencesCommand");
     }
-
+    
+    public String selectedTab;
+    
     @Override
 	protected void doExecuteCommand() {
         FormModel formModel = FormModelHelper.createFormModel(PreferenceRegistry.instance());
-        final EditPreferencesForm form = new EditPreferencesForm(formModel);
+        final EditPreferencesForm form = new EditPreferencesForm(formModel,this.selectedTab);
         FormBackedDialogPage page = new FormBackedDialogPage(form);
 
         TitledPageApplicationDialog dialog = new TitledPageApplicationDialog(page) {

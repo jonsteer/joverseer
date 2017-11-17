@@ -31,7 +31,10 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
 public class ShowViewCommand extends ApplicationWindowAwareCommand {
     private ViewDescriptor viewDescriptor;
 
-    
+    public ShowViewCommand()
+    {
+    	super();
+    }
     public ShowViewCommand(ViewDescriptor viewDescriptor, ApplicationWindow window) {
         setViewDescriptor(viewDescriptor);
         setApplicationWindow(window);

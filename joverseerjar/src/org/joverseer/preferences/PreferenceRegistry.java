@@ -66,10 +66,15 @@ public class PreferenceRegistry {
 		return (PreferenceRegistry) Application.instance().getApplicationContext().getBean("preferenceRegistry");
 	}
 
-	public ArrayList<Preference> getPreferencesSortedByGroup() {
+	public ArrayList<Preference> getPreferencesSortedByGroup(String group) {
+		Boolean all;
+		
+		all = (group == null) || (group.equals(""));
 		ArrayList<Preference> ret = new ArrayList<Preference>();
 		for (Preference p : this.allPreferences) {
-			ret.add(p);
+			if (all || p.group.equals(group)) {
+				ret.add(p);
+			}
 		}
 
 		Collections.sort(ret, new Comparator<Preference>() {
