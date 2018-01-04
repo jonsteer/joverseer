@@ -58,6 +58,11 @@ public class InfoView extends AbstractView {
 		lb.cell(createTableFromResource("classpath:metadata/info/fortifications", 400, 100), "align=left");
 		lb.relatedGapRow();
 
+		lb.separator(Messages.getString("InfoView.CharactersAllowed"));
+		lb.relatedGapRow();
+		lb.cell(createTableFromResource("classpath:metadata/info/charactersAllowed", 400, 100), "align=left");
+		lb.relatedGapRow();
+
 		lb.separator(Messages.getString("InfoView.GeneralCosts"));
 		lb.relatedGapRow();
 		lb.cell(createTableFromResource("classpath:metadata/info/generalCosts", 600, 240), "align=left");
