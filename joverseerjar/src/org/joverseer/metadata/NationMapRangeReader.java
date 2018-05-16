@@ -1,7 +1,5 @@
 package org.joverseer.metadata;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import org.joverseer.metadata.domain.NationMapRange;
 import org.joverseer.support.Container;
 
@@ -11,37 +9,39 @@ import org.joverseer.support.Container;
  * @author Marios Skounakis
  * 
  */
-public class NationMapRangeReader implements MetadataReader {
-	String nationMapFilename = "maps.csv";
+public class NationMapRangeReader extends BaseMetadataReader implements MetadataReader {
+	Container<NationMapRange> mapRanges;
 
 	@Override
-	public void load(GameMetadata gm) throws IOException, MetadataReaderException {
-		Container<NationMapRange> mapRanges = new Container<NationMapRange>();
+	protected void initFilename() {
+		super.filename = "maps.csv";
+	}
 
-		try {
-			BufferedReader reader = gm.getUTF8ResourceByGame(this.nationMapFilename);
+	@Override
+	protected void start() {
+		this.mapRanges = new Container<NationMapRange>();
+	}
 
-			String ln;
-			while ((ln = reader.readLine()) != null) {
-				NationMapRange nmr = new NationMapRange();
-				String[] parts = ln.split(";");
-				int nationNo = Integer.parseInt(parts[0]);
-				int x1 = Integer.parseInt(parts[1]);
-				int y1 = Integer.parseInt(parts[2]);
-				int x2 = Integer.parseInt(parts[3]);
-				int y2 = Integer.parseInt(parts[4]);
-				mapRanges.addItem(nmr);
-				nmr.setNationNo(nationNo);
-				nmr.setTlX(x1);
-				nmr.setTlY(y1);
-				nmr.setBrX(x2);
-				nmr.setBrY(y2);
-			}
-		} catch (IOException exc) {
-			throw exc;
-		} catch (Exception exc) {
-			throw new MetadataReaderException("Error reading nation map metadata.", exc);
-		}
-		gm.setNationMapRanges(mapRanges);
+	@Override
+	protected void finish(GameMetadata gm) {
+		gm.setNationMapRanges(this.mapRanges);
+		this.mapRanges = null;
+	}
+
+	@Override
+	protected void parseLine(String ln) {
+		NationMapRange nmr = new NationMapRange();
+		String[] parts = ln.split(";");
+		int nationNo = Integer.parseInt(parts[0]);
+		int x1 = Integer.parseInt(parts[1]);
+		int y1 = Integer.parseInt(parts[2]);
+		int x2 = Integer.parseInt(parts[3]);
+		int y2 = Integer.parseInt(parts[4]);
+		this.mapRanges.addItem(nmr);
+		nmr.setNationNo(nationNo);
+		nmr.setTlX(x1);
+		nmr.setTlY(y1);
+		nmr.setBrX(x2);
+		nmr.setBrY(y2);
 	}
 }

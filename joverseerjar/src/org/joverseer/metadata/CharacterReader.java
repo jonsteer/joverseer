@@ -1,7 +1,5 @@
 package org.joverseer.metadata;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import org.joverseer.domain.Character;
 import org.joverseer.support.Container;
 import org.joverseer.support.infoSources.MetadataSource;
@@ -12,57 +10,55 @@ import org.joverseer.support.infoSources.MetadataSource;
  * @author Marios Skounakis
  * 
  */
-public class CharacterReader implements MetadataReader {
-	String characterFilename = "chars.csv";
-
+public class CharacterReader extends BaseMetadataReader implements MetadataReader {
+	Container<Character> characters;
+	MetadataSource ms;
 	@Override
-	public void load(GameMetadata gm) throws IOException, MetadataReaderException {
-		gm.setCharacters(loadCharacters(gm));
+	protected void initFilename() {
+		super.filename= "chars.csv";
 	}
 
-	private Container<Character> loadCharacters(GameMetadata gm) throws IOException, MetadataReaderException {
-		Container<Character> characters = new Container<Character>();
+	@Override
+	protected void start() {
+		this.characters = new Container<Character>();
+		this.ms  = new MetadataSource();
+	}
 
-		MetadataSource ms = new MetadataSource();
 
-		try {
-			BufferedReader reader = gm.getUTF8ResourceByGame(this.characterFilename);
+	@Override
+	protected void finish(GameMetadata gm) {
+		gm.setCharacters(this.characters);
+		this.characters = null;
+	}
 
-			String ln;
-			while ((ln = reader.readLine()) != null) {
-				String[] parts = ln.split(";");
-				int nationNo = Integer.parseInt(parts[0]);
-				String charName = parts[1];
-				String id = charName.toLowerCase().substring(0, Math.min(5, charName.length()));
-				int command = Integer.parseInt(parts[2]);
-				int agent = Integer.parseInt(parts[3]);
-				int emmisary = Integer.parseInt(parts[4]);
-				int mage = Integer.parseInt(parts[5]);
-				int stealth = Integer.parseInt(parts[6]);
-				int challenge = Integer.parseInt(parts[7]);
-				int numberOfOrders = 2;
-				if (parts.length > 9) {
-					numberOfOrders = Integer.parseInt(parts[9]);
-				}
-				Character c = new Character();
-				c.setNationNo(new Integer(nationNo));
-				c.setName(charName);
-				c.setId(id);
-				c.setCommand(command);
-				c.setAgent(agent);
-				c.setEmmisary(emmisary);
-				c.setMage(mage);
-				c.setStealth(stealth);
-				c.setChallenge(challenge);
-				c.setNumberOfOrders(numberOfOrders);
-				c.setInfoSource(ms);
-				characters.addItem(c);
-			}
-		} catch (IOException exc) {
-			throw exc;
-		} catch (Exception exc) {
-			throw new MetadataReaderException("Error reading character metadata.", exc);
+	@Override
+	protected void parseLine(String ln) {
+		String[] parts = ln.split(";");
+		int nationNo = Integer.parseInt(parts[0]);
+		String charName = parts[1];
+		String id = charName.toLowerCase().substring(0, Math.min(5, charName.length()));
+		int command = Integer.parseInt(parts[2]);
+		int agent = Integer.parseInt(parts[3]);
+		int emmisary = Integer.parseInt(parts[4]);
+		int mage = Integer.parseInt(parts[5]);
+		int stealth = Integer.parseInt(parts[6]);
+		int challenge = Integer.parseInt(parts[7]);
+		int numberOfOrders = 2;
+		if (parts.length > 9) {
+			numberOfOrders = Integer.parseInt(parts[9]);
 		}
-		return characters;
+		Character c = new Character();
+		c.setNationNo(new Integer(nationNo));
+		c.setName(charName);
+		c.setId(id);
+		c.setCommand(command);
+		c.setAgent(agent);
+		c.setEmmisary(emmisary);
+		c.setMage(mage);
+		c.setStealth(stealth);
+		c.setChallenge(challenge);
+		c.setNumberOfOrders(numberOfOrders);
+		c.setInfoSource(this.ms);
+		this.characters.addItem(c);
 	}
 }

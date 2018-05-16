@@ -2,6 +2,7 @@ package org.joverseer.metadata;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -363,13 +364,13 @@ public class GameMetadata implements Serializable {
 	// files first.
 	// then check classpath 
 	// note that getBasePath is not just a getter.
-	public Resource getResourceByGame(String filename) {
+	public Resource getResourceByGame(String filename) throws FileNotFoundException {
 		return getResource(getGameType().toString() + "." + filename);
 	}
 	public BufferedReader getUTF8ResourceByGame(String filename) throws IOException {
 		return getUTF8Resource(getGameType().toString() + "." + filename);
 	}
-	public Resource getResource(String resourceName) {
+	public Resource getResource(String resourceName) throws FileNotFoundException {
 		try {
 			Resource r = Application.instance().getApplicationContext().getResource("file:///" + getBasePath() + "/" + resourceName);
 			new InputStreamReader(r.getInputStream());
@@ -381,8 +382,7 @@ public class GameMetadata implements Serializable {
 				new InputStreamReader(r.getInputStream());
 				return r;
 			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-				return null;
+				throw new FileNotFoundException();
 			}
 		}
 	}

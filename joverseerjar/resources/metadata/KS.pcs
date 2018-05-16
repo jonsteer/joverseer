@@ -1,14 +1,14 @@
-0203,0,3,0,6,0,1,Cerin Pelram,55,False,True,1,False
+0203,0,3,0,6,0,2,Cerin Pelram,55,False,True,1,False
 0207,0,1,0,6,0,0,Annon Thalion,30,False,True,1,False
-0408,0,3,0,6,0,1,Forlond,55,False,True,1,False
+0408,0,3,0,6,0,2,Forlond,55,False,True,1,False
 0508,0,2,0,6,0,0,Lanthir Lamath,40,False,True,1,False
-0511,0,3,0,6,0,1,Galanros,55,False,True,1,False
+0511,0,3,0,6,0,2,Galanros,55,False,True,1,False
 0604,0,3,1,22,0,0,Kelai,55,False,True,1,False
 0606,0,3,0,22,0,0,Nogrod,55,False,True,1,False
 0703,0,3,1,22,0,0,Haudh-gilril,55,False,True,1,False
-0711,0,3,1,6,0,1,Harlond,55,False,True,1,True
+0711,0,3,1,6,0,2,Harlond,55,False,True,1,True
 0807,0,3,0,5,0,0,Guldor,55,False,True,1,False
-0808,0,5,0,6,0,2,Mithlond,100,False,True,1,True
+0808,0,5,0,6,0,1,Mithlond,100,False,True,1,True
 0810,0,2,0,6,0,0,Elostirion,40,False,True,1,True
 0811,0,1,0,12,0,0,Feador,30,False,True,1,True
 0812,0,3,3,22,0,0,Belegost,55,False,True,1,False
@@ -26,14 +26,14 @@
 1110,0,2,0,5,0,0,Kemen Girith,40,False,True,1,False
 1113,0,0,1,0,0,0,Minas Girithlin,0,False,True,1,False
 1210,0,1,0,12,0,0,Kul-vrestik,30,False,True,1,True
-1211,0,3,1,5,0,1,Athrad Sarn,55,False,True,1,False
+1211,0,3,1,5,0,2,Athrad Sarn,55,False,True,1,False
 1219,0,0,1,0,0,0,Sudûri,0,False,True,1,False
-1227,0,4,2,13,0,2,Lond Galen,75,False,True,1,False
+1227,0,4,2,13,0,1,Lond Galen,75,False,True,1,False
 1309,0,2,0,5,0,0,Malonn,40,False,True,1,False
 1312,0,1,0,5,0,0,Eridea,30,False,True,1,False
 1317,0,0,1,0,0,0,Balost,0,False,True,1,False
 1321,0,1,0,6,0,0,Ost-amarth,30,False,True,1,False
-1324,0,4,2,14,0,2,Lithu Iamon,75,False,True,1,False
+1324,0,4,2,14,0,1,Lithu Iamon,75,False,True,1,False
 1407,0,5,5,5,0,0,Fornost,100,False,True,1,False
 1409,0,4,0,5,0,0,Bree,75,False,True,1,False
 1410,0,4,0,5,0,0,Kemen Brith,75,False,True,1,False
@@ -45,7 +45,7 @@
 1514,0,0,1,0,0,0,Argond,0,False,True,1,False
 1602,0,1,0,16,0,0,Eregiath,30,False,True,1,False
 1609,0,2,3,5,0,0,Amon Sûl,40,False,True,1,False
-1614,0,5,2,5,0,2,Tharbad,100,False,True,1,False
+1614,0,5,2,5,0,1,Tharbad,100,False,True,1,False
 1715,0,3,2,5,0,0,Narram,55,False,True,1,False
 1720,0,3,1,13,0,0,Lond Angren,55,False,True,1,False
 1721,0,1,0,6,0,0,Sarn Celebdor,30,False,True,1,False
@@ -78,9 +78,9 @@
 2123,0,5,2,21,0,0,Tarlangband,100,False,True,1,False
 2124,0,1,1,21,0,0,Minor Carvarad,30,False,True,1,False
 2125,0,2,0,21,0,0,Min-Aear,40,False,True,1,False
-2135,0,3,2,14,0,1,Vamag,55,False,True,1,False
+2135,0,3,2,14,0,2,Vamag,55,False,True,1,False
 2136,0,2,0,6,0,0,Tir Tarsul,40,False,True,1,False
-2137,0,4,2,6,0,2,Eithel Culroch,75,False,True,1,True
+2137,0,4,2,6,0,1,Eithel Culroch,75,False,True,1,True
 2205,0,3,1,22,0,0,Skall,55,False,True,1,False
 2206,0,1,0,16,0,0,Ras Morthil,30,False,True,1,False
 2209,0,4,2,6,0,0,Imladris,75,False,True,1,True
@@ -91,7 +91,7 @@
 2222,0,3,2,22,0,0,Kalidasa,55,False,True,1,False
 2223,0,1,1,21,0,0,Nan-Curunir,30,False,True,1,False
 2225,0,1,1,21,0,0,Kul Gorta,30,False,True,1,False
-2227,0,5,5,21,0,2,Lond Emil,100,False,True,1,False
+2227,0,5,5,21,0,1,Lond Emil,100,False,True,1,False
 2236,0,2,1,11,0,0,Isgir,40,False,True,1,False
 2305,0,4,2,16,0,0,Gundabad,75,False,True,1,False
 2306,0,1,0,16,0,0,Lund Gelin,30,False,True,1,False
@@ -99,12 +99,12 @@
 2311,0,1,0,22,0,0,Bizul-baran,30,False,True,1,False
 2313,0,3,0,22,0,0,Duria,55,False,True,1,False
 2324,0,1,1,11,0,0,Ang-Gimbatul,30,False,True,1,False
-2325,0,3,0,6,0,1,Edhellond,55,False,True,1,True
+2325,0,3,0,6,0,2,Edhellond,55,False,True,1,True
 2326,0,1,0,21,0,0,Imled Druwaith,30,False,True,1,False
 2327,0,2,2,21,0,0,Mormoth,40,False,True,1,False
 2328,0,1,0,21,0,0,Morband,30,False,True,1,False
-2337,0,3,0,11,0,1,Maros,55,False,True,1,False
-2339,0,4,1,11,0,1,Pellardur,75,False,True,1,False
+2337,0,3,0,11,0,2,Maros,55,False,True,1,False
+2339,0,4,1,11,0,2,Pellardur,75,False,True,1,False
 2404,0,3,0,16,0,0,Krimpatal,55,False,True,1,False
 2405,0,0,1,0,0,0,Amon Dagor,0,False,True,1,False
 2409,0,3,1,16,0,0,Goblin-town,55,False,True,1,False
@@ -114,10 +114,10 @@
 2424,0,4,2,12,0,0,Calembel,75,False,True,1,False
 2425,0,1,1,11,0,0,Grath Murloth,30,False,True,1,False
 2426,0,2,1,11,0,0,Lag-raukonar,40,False,True,1,False
-2430,0,3,1,13,0,1,Tolfalas,55,False,True,1,False
+2430,0,3,1,13,0,2,Tolfalas,55,False,True,1,False
 2436,0,1,0,12,0,0,Kordas,30,False,True,1,False
 2437,0,4,1,11,0,0,Dusalan,75,False,True,1,False
-2438,0,5,1,13,0,2,Havens of Umbar,100,False,True,1,False
+2438,0,5,1,13,0,1,Havens of Umbar,100,False,True,1,False
 2505,0,1,0,3,0,0,Falagund,30,False,True,1,False
 2508,0,4,1,3,0,0,Maethelburg,75,False,True,1,False
 2510,0,1,0,3,0,0,Hope Downs,30,False,True,1,False
@@ -130,7 +130,7 @@
 2619,0,3,1,3,0,0,Ariauriath,55,False,True,1,False
 2625,0,1,0,11,0,0,Dol Delgrod,30,False,True,1,False
 2626,0,3,0,12,0,0,Minas Brethil,55,False,True,1,False
-2627,0,4,2,11,0,2,Linhir,75,False,True,1,False
+2627,0,4,2,11,0,1,Linhir,75,False,True,1,False
 2630,0,2,0,14,0,0,Luinbar,40,False,True,1,False
 2631,0,1,0,13,0,0,Carach Annon,30,False,True,1,False
 2703,0,0,2,0,0,0,Kala Dalakurth,0,False,True,1,False
@@ -143,17 +143,17 @@
 2724,0,1,0,12,0,0,Celeb-gond,30,False,True,1,False
 2725,0,4,1,12,0,0,Mar Aran,75,False,True,1,True
 2730,0,1,0,13,0,0,Methir,30,False,True,1,False
-2732,0,4,2,13,0,2,Caras Mirilond,75,False,True,1,False
-2734,0,4,2,14,0,2,Kas Shadoul,75,False,True,1,False
+2732,0,4,2,13,0,1,Caras Mirilond,75,False,True,1,False
+2734,0,4,2,14,0,1,Kas Shadoul,75,False,True,1,False
 2809,0,1,0,12,0,0,Tar Beraid,30,False,True,1,True
-2829,0,3,1,11,0,1,Benish Arnon,55,False,True,1,False
+2829,0,3,1,11,0,2,Benish Arnon,55,False,True,1,False
 2834,0,3,0,14,0,0,An Pharaz,55,False,True,1,False
 2908,0,3,2,6,0,0,Halls of Thranduil,55,False,True,1,True
 2915,0,1,0,6,0,0,Tir Hargil,30,False,True,1,False
 2923,0,3,1,13,0,0,Shantytown,55,False,True,1,False
-2924,0,4,3,13,0,2,Minas Arnor,75,False,True,1,False
+2924,0,4,3,13,0,1,Minas Arnor,75,False,True,1,False
 2926,0,2,0,11,0,0,Minas Arthor,40,False,True,1,False
-2927,0,5,3,11,0,2,Pelagir,100,False,True,1,False
+2927,0,5,3,11,0,1,Pelagir,100,False,True,1,False
 2928,0,3,3,11,0,0,Hyarpende,55,False,True,1,False
 2934,0,2,0,14,0,0,Stolis,40,False,True,1,False
 2935,0,2,0,14,0,0,Has Dathuin,40,False,True,1,False
@@ -164,11 +164,11 @@
 3022,0,1,0,6,0,0,Sarnost,30,False,True,1,False
 3024,0,1,1,12,0,0,Osgilliath,30,False,True,1,False
 3032,0,1,0,14,0,0,Kemen-sereg,30,False,True,1,False
-3034,0,3,2,14,0,1,Lugarlur,55,False,True,1,False
+3034,0,3,2,14,0,2,Lugarlur,55,False,True,1,False
 3102,0,3,1,22,0,0,Haudh-en-Heru,55,False,True,1,False
 3107,0,0,2,0,0,0,Hul Ardon,0,False,True,1,False
 3108,0,3,1,1,0,0,Dale,55,False,True,1,False
-3109,0,4,1,3,0,1,Esgaroth,75,False,True,1,False
+3109,0,4,1,3,0,2,Esgaroth,75,False,True,1,False
 3110,0,3,1,3,0,0,Londaroth,55,False,True,1,False
 3111,0,3,0,3,0,0,Iach Celduin,55,False,True,1,False
 3114,0,4,1,3,0,0,Strayhold,75,False,True,1,False
@@ -225,7 +225,7 @@
 3916,0,2,1,22,0,0,Aingrod,40,False,True,1,False
 3921,0,3,0,2,0,0,Grimfall,55,False,True,1,False
 3929,0,3,0,2,0,0,Lag Nurnen,55,False,True,1,True
-4013,0,5,2,4,0,1,Shrel Kain,100,False,True,1,False
+4013,0,5,2,4,0,2,Shrel Kain,100,False,True,1,False
 4017,0,1,0,4,0,0,Kinshali,30,False,True,1,False
 4031,0,3,0,2,0,0,Minas Tarrond,55,False,True,1,False
 4119,0,4,0,4,0,0,Kul-sordas,75,False,True,1,False
@@ -235,7 +235,7 @@
 4135,0,1,0,2,0,0,Hunderag rock,30,False,True,1,False
 4211,0,1,1,15,0,0,Barad Nimram,30,False,True,1,False
 4215,0,1,0,12,0,0,Eillonud,30,False,True,1,True
-4217,0,4,0,4,0,1,Dilgul,75,False,True,1,False
+4217,0,4,0,4,0,2,Dilgul,75,False,True,1,False
 4228,0,3,0,15,0,0,Zar-Amu,55,False,True,1,False
 4234,0,1,0,15,0,0,Thaurdraug,30,False,True,1,False
 4309,0,1,0,15,0,0,Urbrith,30,False,True,1,False
