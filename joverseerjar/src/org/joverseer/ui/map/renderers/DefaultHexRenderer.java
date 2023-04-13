@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.joverseer.metadata.domain.Hex;
 import org.joverseer.metadata.domain.HexSideElementEnum;
 import org.joverseer.metadata.domain.HexSideEnum;
@@ -24,13 +25,16 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.richclient.application.Application;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Renders a hex (terrain, sides, etc)
  * 
  * @author Marios Skounakis
  */
-public class DefaultHexRenderer extends ImageRenderer implements ApplicationListener {
+public class DefaultHexRenderer extends SVGRenderer implements ApplicationListener {
 	HashMap<Integer, Color> terrainColors = new HashMap<Integer, Color>();
 
 	protected int[] xPoints = new int[6];
@@ -46,6 +50,9 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 	Color bridgeColor;
 	Color fordColor;
 	HashMap<MapOptionsEnum, Object> mapOptions;
+	
+	private DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+    private String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;	
 
 	private boolean useTexture;
 	
@@ -54,6 +61,7 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 
 	@Override
 	public void refreshConfig() {
+
 		this.xPoints[0] = this.mapMetadata.getHexSize() / 2 * this.mapMetadata.getGridCellWidth();
 		this.xPoints[1] = this.mapMetadata.getHexSize() * this.mapMetadata.getGridCellWidth();
 		this.xPoints[2] = this.mapMetadata.getHexSize() * this.mapMetadata.getGridCellWidth();
@@ -88,8 +96,6 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 		setBridgeColor(Color.decode(colorStr));
 		colorStr = colorSource.getMessage("ford.color", null, Locale.getDefault());
 		setFordColor(Color.decode(colorStr));
-
-		this.images.clear();
 
 		this.mapOptions = (HashMap<MapOptionsEnum, Object>) Application.instance().getApplicationContext().getBean("mapOptions");
 
@@ -229,7 +235,7 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 
 
 	@Override
-	public void render(Object obj, Graphics2D g, int x, int y) {
+	public void render(Object obj, SVGDocument s, int x, int y) {
 		if (!appliesTo(obj)) {
 			throw new IllegalArgumentException(obj.toString());
 		}
@@ -241,8 +247,8 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 		boolean imageDrawn = false;
 
         // required to stop aliased background bleed through hex sides
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
 		// options listed here for ease of tweaking for developers.
 //		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -253,50 +259,43 @@ public class DefaultHexRenderer extends ImageRenderer implements ApplicationList
 //      g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 //      g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         
+		Element svghex = s.createElementNS(this.svgNS, "polygon");
+		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
+		
 		if (this.useTexture) {
-			BufferedImage img = getImage(hex.getTerrain().toString() + ".terrain", this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize(), this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize());
-			if (img != null) {
-				g.drawImage(img, x, y, null);
-				Polygon polygon1 = new Polygon(this.xPoints, this.yPoints, 6);
-				polygon1.translate(x, y);
-				g.setColor(Color.black);
-				g.drawPolygon(polygon1);
-				imageDrawn = true;
-			}
-		}
-		if (!imageDrawn) {
-			Polygon polygon1 = new Polygon(this.xPoints, this.yPoints, 6);
-			polygon1.translate(x, y);
-			g.setColor(getColor(hex));
-			g.fillPolygon(polygon1);
-			g.setColor(Color.black);
-			g.drawPolygon(polygon1);
-		}
-		for (HexSideEnum side : HexSideEnum.values()) {
-			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
-			if (elements.size() > 0) {
-				if (elements.contains(HexSideElementEnum.MajorRiver)) {
-					renderMajorRiver(g, side, x, y);
-				} else if (elements.contains(HexSideElementEnum.MinorRiver)) {
-					renderMinorRiver(g, side, x, y);
-				}
-				;
-				if (elements.contains(HexSideElementEnum.Road)) {
-					renderRoad(g, side, x, y);
-				}
-				;
-				if (elements.contains(HexSideElementEnum.Bridge)) {
-					renderBridge(g, side, x, y);
-				}
-				;
-				if (elements.contains(HexSideElementEnum.Ford)) {
-					renderFord(g, side, x, y);
-				}
-				;
 
-			}
 		}
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		
+		svghex.setAttributeNS(null, "fill", "#"+Integer.toHexString(getColor(hex).getRGB()).substring(2));
+
+		Element svgRoot = s.getDocumentElement();
+		svgRoot.appendChild(svghex);
+		
+//		for (HexSideEnum side : HexSideEnum.values()) {
+//			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
+//			if (elements.size() > 0) {
+//				if (elements.contains(HexSideElementEnum.MajorRiver)) {
+//					renderMajorRiver(g, side, x, y);
+//				} else if (elements.contains(HexSideElementEnum.MinorRiver)) {
+//					renderMinorRiver(g, side, x, y);
+//				}
+//				;
+//				if (elements.contains(HexSideElementEnum.Road)) {
+//					renderRoad(g, side, x, y);
+//				}
+//				;
+//				if (elements.contains(HexSideElementEnum.Bridge)) {
+//					renderBridge(g, side, x, y);
+//				}
+//				;
+//				if (elements.contains(HexSideElementEnum.Ford)) {
+//					renderFord(g, side, x, y);
+//				}
+//				;
+//
+//			}
+//		}
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
 	}
 

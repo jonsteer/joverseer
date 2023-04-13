@@ -6,7 +6,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -20,31 +19,23 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JViewport;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.swing.JSVGCanvas;
 import org.apache.log4j.Logger;
 import org.joverseer.JOApplication;
 import org.joverseer.domain.Army;
 import org.joverseer.domain.Artifact;
 import org.joverseer.domain.Character;
-import org.joverseer.domain.Combat;
-import org.joverseer.domain.Encounter;
-import org.joverseer.domain.NationMessage;
-import org.joverseer.domain.Note;
-import org.joverseer.domain.Order;
-import org.joverseer.domain.PopulationCenter;
 import org.joverseer.game.Game;
 import org.joverseer.game.Turn;
 import org.joverseer.metadata.GameMetadata;
@@ -71,7 +62,6 @@ import org.joverseer.ui.command.range.ShowUnfedNavyCoastalRangeCommand;
 import org.joverseer.ui.command.range.ShowUnfedNavyOpenSeasRangeCommand;
 import org.joverseer.ui.command.CreateCombatForHexCommand;
 import org.joverseer.ui.domain.mapEditor.MapEditorOptionsEnum;
-import org.joverseer.ui.domain.mapItems.AbstractMapItem;
 import org.joverseer.ui.map.renderers.Renderer;
 import org.joverseer.ui.support.Messages;
 import org.joverseer.ui.support.dataFlavors.ArtifactDataFlavor;
@@ -82,6 +72,11 @@ import org.springframework.richclient.application.Application;
 import org.springframework.richclient.command.CommandGroup;
 import org.springframework.richclient.dialog.ConfirmationDialog;
 import org.springframework.richclient.progress.BusyIndicator;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import java.io.*;
 
 /**
  * The basic control for displaying the map. It derives itself from a JPanel and
@@ -107,7 +102,7 @@ import org.springframework.richclient.progress.BusyIndicator;
  *
  * @author Marios Skounakis
  */
-public class MapPanel extends JPanel implements MouseInputListener, MouseWheelListener {
+public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWheelListener {
 	/**
 	 *
 	 */
@@ -124,12 +119,15 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 	Point location = new Point();
 	boolean outOfMemoryErrorThrown = false;
 
-	BufferedImage map = null;
-	BufferedImage mapBaseItems = null;
-	BufferedImage mapItems = null;
-	BufferedImage mapBack = null;
-	BufferedImage mapBaseItemsBack = null;
-	BufferedImage mapItemsBack = null;
+	SVGDocument map = null;
+	SVGDocument mapBaseItems = null;
+	SVGDocument mapItems = null;
+	SVGDocument mapBack = null;
+	SVGDocument mapBaseItemsBack = null;
+	SVGDocument mapItemsBack = null;
+	
+	private DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+    private String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
 
 	MapMetadata metadata;
 
@@ -156,6 +154,8 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		this.setDropTarget(new DropTarget(this, new MapPanelDropTargetAdapter()));
 		_instance = this;
 		this.gameHolder = gameHolder;
+		
+		this.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 	}
 
 	public static MapPanel instance() {
@@ -245,33 +245,44 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 
 		if (this.mapBack == null) {
 			Dimension d = getMapDimension();
-			this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			
+			this.mapBack = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
+			// Get the root element (the 'svg' element).
+			Element svgRoot = this.mapBack.getDocumentElement();
+
+			// Set the width and height attributes on the root 'svg' element.
+			svgRoot.setAttributeNS(null, "width", d.getWidth()+"");
+			svgRoot.setAttributeNS(null, "height", d.getHeight()+"");			
+			//this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			this.setPreferredSize(d);
 			this.setSize(d);
 		}
 		this.map = this.mapBack;
+		Element svgRoot = this.map.getDocumentElement();
 
-		Graphics2D g = this.map.createGraphics();
-		g.setColor(this.backgroundColour);
-		g.fillRect(0, 0, this.map.getWidth(), this.map.getHeight());
+		// Create the rectangle.
+		Element rectangle = this.map.createElementNS(this.svgNS, "rect");
+		rectangle.setAttributeNS(null, "x", "10");
+		rectangle.setAttributeNS(null, "y", "20");
+		rectangle.setAttributeNS(null, "width", "100");
+		rectangle.setAttributeNS(null, "height", "50");
+		rectangle.setAttributeNS(null, "fill", "red");
 
-		// try {
-		// Resource r =
-		// Application.instance().getApplicationContext().getResource("classpath:images/map/map.png");
-		// BufferedImage mm = ImageIO.read(r.getInputStream());
-		// g.drawImage(mm, 0, 0, null);
-		// }
-		// catch (Exception exc) {
-		// exc.printStackTrace();
-		// }
+		// Attach the rectangle to the root 'svg' element.
+		svgRoot.appendChild(rectangle);		
+
+
+//		Element baseMap = this.map.createElementNS(this.svgNS, "g");
+//		baseMap.setAttribute("id", "basemap");
+//		svgRoot.appendChild(baseMap);
 
 		refreshRendersConfig();
 
 		for (Hex h : gm.getHexes()) {
 			setHexLocation(h.getColumn(), h.getRow());
 			for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-				if (r.appliesTo(h)) {
-					r.render(h, g, this.location.x, this.location.y);
+				if (r.appliesTo(h) && r.isSVGReady()) {
+					r.render(h, this.map, this.location.x, this.location.y);
 				}
 			}
 		}
@@ -279,21 +290,31 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		for (Hex h : hexOverrides) {
 			setHexLocation(h.getColumn(), h.getRow());
 			for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-				if (r.appliesTo(h)) {
-					r.render(h, g, this.location.x, this.location.y);
+				if (r.appliesTo(h) && r.isSVGReady()) {
+					r.render(h, this.map, this.location.x, this.location.y);
 				}
 			}
 		}
 
 		if (this.saveMap) {
-			File outputFile = new File("map.png"); //$NON-NLS-1$
+			File outputFile = new File("map.svg"); //$NON-NLS-1$
 			try {
-				ImageIO.write(this.map, "PNG", outputFile); //$NON-NLS-1$
+				saveSvgDocumentToFile(this.map, outputFile);
+				
 			} catch (Exception exc) {
 			}
 			;
 		}
+		
+		this.setSVGDocument(this.map);		
 	}
+	public static void saveSvgDocumentToFile(SVGDocument document, File file)
+	        throws FileNotFoundException, IOException {
+	    SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+	    try (Writer out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
+	        svgGenerator.stream(document.getDocumentElement(), out);
+	    }
+	}	
 
 	public Dimension getMapDimension() {
 		int width = (int) ((this.metadata.getMaxMapColumn() + 2d - this.metadata.getMinMapColumn() - .5) * this.metadata.getHexSize() * this.metadata.getGridCellWidth());
@@ -313,72 +334,70 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		if (!Game.isInitialized(game1))
 			return;
 
-		Graphics2D g = null;
+
 		BusyIndicator.showAt(this);
 		try {
 			refreshRendersConfig();
 			if (this.mapItemsBack == null) {
 				Dimension d = getMapDimension();
-				this.mapItemsBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				this.mapItemsBack = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
 			}
 			this.mapItems = this.mapItemsBack;
-
-			g = this.mapItems.createGraphics();
 
 			if (this.mapBaseItems == null) {
 				createMapBaseItems();
 			}
-			g.drawImage(this.mapBaseItems, 0, 0, this);
+//			//g.drawImage(this.mapBaseItems, 0, 0, this);
 		} catch (OutOfMemoryError e) {
 			if (!this.outOfMemoryErrorThrown) {
 				this.outOfMemoryErrorThrown = true;
 				throw e;
 			}
 		}
-
-		try {
-			for (Character c1 : getGame().getTurn().getCharacters()) {
-				for (Order o : c1.getOrders()) {
-					for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-						if (r.appliesTo(o)) {
-							setHexLocation(c1.getX(), c1.getY());
-							try {
-								r.render(o, g, this.location.x, this.location.y);
-							} catch (Exception exc) {
-								logger.error("Error rendering order " + o.getCharacter().getName() + " " + o.getOrderNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering orders " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		for (AbstractMapItem mi : game1.getTurn().getMapItems()) {
-			for (Renderer r : metadata1.getRenderers()) {
-				if (r.appliesTo(mi)) {
-					r.render(mi, g, 0, 0);
-				}
-			}
-		}
-
-		try {
-			for (Note n : getGame().getTurn().getNotes()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(n)) {
-						setHexLocation(n.getX(), n.getY());
-						try {
-							r.render(n, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering note " + n.getHexNo() + " " + n.getText() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering notes " + exc.getMessage()); //$NON-NLS-1$
-		}
+//
+//		try {
+//			for (Character c1 : getGame().getTurn().getCharacters()) {
+//				for (Order o : c1.getOrders()) {
+//					for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//						if (r.appliesTo(o)) {
+//							setHexLocation(c1.getX(), c1.getY());
+//							try {
+//								r.render(o, g, this.location.x, this.location.y);
+//							} catch (Exception exc) {
+//								logger.error("Error rendering order " + o.getCharacter().getName() + " " + o.getOrderNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//							}
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering orders " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		for (AbstractMapItem mi : game1.getTurn().getMapItems()) {
+//			for (Renderer r : metadata1.getRenderers()) {
+//				if (r.appliesTo(mi)) {
+//					r.render(mi, g, 0, 0);
+//				}
+//			}
+//		}
+//
+//		try {
+//			for (Note n : getGame().getTurn().getNotes()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(n)) {
+//						setHexLocation(n.getX(), n.getY());
+//						try {
+//							r.render(n, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering note " + n.getHexNo() + " " + n.getText() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering notes " + exc.getMessage()); //$NON-NLS-1$
+//		}
 		BusyIndicator.clearAt(this);
 	}
 
@@ -404,143 +423,141 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		refreshRendersConfig();
 		if (this.mapBaseItemsBack == null) {
 			Dimension d = getMapDimension();
-			this.mapBaseItemsBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			this.mapBaseItemsBack = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
 		}
 		this.mapBaseItems = this.mapBaseItemsBack;
-
-		Graphics2D g = this.mapBaseItems.createGraphics();
 
 		if (this.map == null) {
 			createMap();
 		}
-		g.drawImage(this.map, 0, 0, this);
+		//g.drawImage(this.map, 0, 0, this);
 
-		try {
-			for (PopulationCenter pc : getGame().getTurn().getPopulationCenters()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(pc)) {
-						setHexLocation(pc.getX(), pc.getY());
-						try {
-							r.render(pc, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error pc " + pc.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			for (Character c1 : getGame().getTurn().getCharacters()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(c1)) {
-						setHexLocation(c1.getX(), c1.getY());
-						try {
-							r.render(c1, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering character " + c1.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			for (Army army : getGame().getTurn().getArmies()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(army)) {
-						setHexLocation(army.getX(), army.getY());
-						try {
-							r.render(army, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering army " + army.getCommanderName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			for (NationMessage nm : getGame().getTurn().getNationMessages()) {
-				if (nm.getX() <= 0 || nm.getY() <= 0)
-					continue;
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(nm)) {
-						setHexLocation(nm.getX(), nm.getY());
-						try {
-							r.render(nm, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering nation message " + nm.getMessage() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering nation " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			for (Artifact a : getGame().getTurn().getArtifacts()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(a)) {
-						setHexLocation(a.getX(), a.getY());
-						try {
-							r.render(a, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering artifact " + a.getNumber() + " " + a.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering orders " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			for (Combat a : getGame().getTurn().getCombats()) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(a)) {
-						setHexLocation(a.getX(), a.getY());
-						try {
-							r.render(a, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering combat " + a.getHexNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering combats " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		try {
-			ArrayList<Encounter> encounters = new ArrayList<Encounter>();
-			encounters.addAll(getGame().getTurn().getEncounters().getItems());
-			encounters.addAll(getGame().getTurn().getChallenges().getItems());
-			for (Encounter a : encounters) {
-				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-					if (r.appliesTo(a)) {
-						setHexLocation(a.getX(), a.getY());
-						try {
-							r.render(a, g, this.location.x, this.location.y);
-						} catch (Exception exc) {
-							logger.error("Error rendering encounter " + a.getHexNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					}
-				}
-			}
-		} catch (Exception exc) {
-			logger.error("Error rendering encounters " + exc.getMessage()); //$NON-NLS-1$
-		}
-
-		BusyIndicator.clearAt(this);
+//		try {
+//			for (PopulationCenter pc : getGame().getTurn().getPopulationCenters()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(pc)) {
+//						setHexLocation(pc.getX(), pc.getY());
+//						try {
+//							r.render(pc, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error pc " + pc.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			for (Character c1 : getGame().getTurn().getCharacters()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(c1)) {
+//						setHexLocation(c1.getX(), c1.getY());
+//						try {
+//							r.render(c1, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering character " + c1.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			for (Army army : getGame().getTurn().getArmies()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(army)) {
+//						setHexLocation(army.getX(), army.getY());
+//						try {
+//							r.render(army, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering army " + army.getCommanderName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			for (NationMessage nm : getGame().getTurn().getNationMessages()) {
+//				if (nm.getX() <= 0 || nm.getY() <= 0)
+//					continue;
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(nm)) {
+//						setHexLocation(nm.getX(), nm.getY());
+//						try {
+//							r.render(nm, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering nation message " + nm.getMessage() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering nation " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			for (Artifact a : getGame().getTurn().getArtifacts()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(a)) {
+//						setHexLocation(a.getX(), a.getY());
+//						try {
+//							r.render(a, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering artifact " + a.getNumber() + " " + a.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering orders " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			for (Combat a : getGame().getTurn().getCombats()) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(a)) {
+//						setHexLocation(a.getX(), a.getY());
+//						try {
+//							r.render(a, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering combat " + a.getHexNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering combats " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		try {
+//			ArrayList<Encounter> encounters = new ArrayList<Encounter>();
+//			encounters.addAll(getGame().getTurn().getEncounters().getItems());
+//			encounters.addAll(getGame().getTurn().getChallenges().getItems());
+//			for (Encounter a : encounters) {
+//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+//					if (r.appliesTo(a)) {
+//						setHexLocation(a.getX(), a.getY());
+//						try {
+//							r.render(a, g, this.location.x, this.location.y);
+//						} catch (Exception exc) {
+//							logger.error("Error rendering encounter " + a.getHexNo() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+//						}
+//					}
+//				}
+//			}
+//		} catch (Exception exc) {
+//			logger.error("Error rendering encounters " + exc.getMessage()); //$NON-NLS-1$
+//		}
+//
+//		BusyIndicator.clearAt(this);
 	}
 
 	@Override
@@ -562,6 +579,8 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		this.mapBaseItems = null;
 		this.mapItems = null;
 		setGame(this.gameHolder.getGame());
+		
+		this.createMapItems();
 	}
 
 	public void invalidateMapItems() {
@@ -585,44 +604,44 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 	 *
 	 * @param g
 	 */
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		
-		if (isOpaque()) {
-			g.setColor(getBackground());
-			g.fillRect(0, 0, getWidth(), getHeight());
-		}
-
-		if (this.mapItems == null) {
-			createMapItems();
-		}
-		if (this.mapItems == null) {
-			// application is not ready
-			return;
-		}
-
-		try {
-			MapMetadata.instance();
-		} catch (Exception exc) {
-			// application is not ready
-			return;
-		}
-
-		// g.drawImage(map, 0, 0, this);
-		g.drawImage(this.mapItems, 0, 0, this);
-
-		if (getSelectedHex() != null) {
-			Stroke s = ((Graphics2D) g).getStroke();
-			Stroke r = new BasicStroke(2);
-			setPoints(getSelectedHex().x, getSelectedHex().y);
-			g.setColor(Color.YELLOW);
-			((Graphics2D) g).setStroke(r);
-			g.drawPolygon(this.xPoints, this.yPoints, 6);
-			((Graphics2D) g).setStroke(s);
-		}
-
-	}
+//	@Override
+//	public void paintComponent(Graphics g) {
+//		super.paintComponent(g);
+//		
+//		if (isOpaque()) {
+//			g.setColor(getBackground());
+//			g.fillRect(0, 0, getWidth(), getHeight());
+//		}
+//
+//		if (this.mapItems == null) {
+//			createMapItems();
+//		}
+//		if (this.mapItems == null) {
+//			// application is not ready
+//			return;
+//		}
+//
+//		try {
+//			MapMetadata.instance();
+//		} catch (Exception exc) {
+//			// application is not ready
+//			return;
+//		}
+//
+//		// g.drawImage(map, 0, 0, this);
+//		//g.drawImage(this.mapItems, 0, 0, this);
+//
+//		if (getSelectedHex() != null) {
+//			Stroke s = ((Graphics2D) g).getStroke();
+//			Stroke r = new BasicStroke(2);
+//			setPoints(getSelectedHex().x, getSelectedHex().y);
+//			g.setColor(Color.YELLOW);
+//			((Graphics2D) g).setStroke(r);
+//			g.drawPolygon(this.xPoints, this.yPoints, 6);
+//			((Graphics2D) g).setStroke(s);
+//		}
+//
+//	}
 
 	public Point getSelectedHex() {
 		return this.selectedHex;
@@ -919,7 +938,7 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 		this.game = game;
 	}
 
-	public BufferedImage getMapImage() {
+	public SVGDocument getMapImage() {
 		return this.mapItems;
 	}
 
@@ -935,7 +954,7 @@ public class MapPanel extends JPanel implements MouseInputListener, MouseWheelLi
 	public void setHex(String hex) {
 	};
 
-	public BufferedImage getMap() {
+	public SVGDocument getMap() {
 		return this.mapItems;
 	}
 

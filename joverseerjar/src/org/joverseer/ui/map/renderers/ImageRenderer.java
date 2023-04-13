@@ -1,6 +1,8 @@
 package org.joverseer.ui.map.renderers;
 
 import org.springframework.richclient.image.ImageSource;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGDocument;
 import org.apache.log4j.Logger;
 import java.util.HashMap;
 import java.awt.image.*;
@@ -27,6 +29,8 @@ public abstract class ImageRenderer extends AbstractBaseRenderer {
 	public void setImgSource(ImageSource imgSource) {
 		this.imgSource = imgSource;
 	}
+	
+
 
 	public BufferedImage copyImage(BufferedImage image) {
         BufferedImage newImage = new BufferedImage(image.getWidth(),
@@ -178,4 +182,6 @@ public abstract class ImageRenderer extends AbstractBaseRenderer {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
 }

@@ -65,8 +65,8 @@ public class JOverseerJIDEClient {
 			
 			Logger rootLogger = Logger.getRootLogger();
 
-//			rootLogger.setLevel(Level.DEBUG);
-			rootLogger.setLevel(Level.WARN);
+			rootLogger.setLevel(Level.DEBUG);
+//			rootLogger.setLevel(Level.WARN);
 			rootLogger.addAppender(fileAppender);
 			
 //			for (Enumeration loggers=LogManager.getCurrentLoggers(); loggers.hasMoreElements(); )  {
@@ -116,14 +116,16 @@ public class JOverseerJIDEClient {
 		String name;
 		SimpleDateFormat format = new SimpleDateFormat("M-d_HHmmss");
 		name = "joverseer_"+format.format(Calendar.getInstance().getTime());
-		try {
-			log = File.createTempFile(name, ".log");
-			// this next line will get skipped on an exception
-			name = log.getAbsolutePath();
-		} catch (IOException e) {
-			// fallback to somewhere that should be writable, but a bit messy for the user.
-			name = System.getProperty("user.home") + File.separator + name + ".log"; 
-		}
+//		try {
+//			log = File.createTempFile(name, ".log");
+//			// this next line will get skipped on an exception
+//			name = log.getAbsolutePath();
+//		} catch (IOException e) {
+//			// fallback to somewhere that should be writable, but a bit messy for the user.
+//			name = System.getProperty("user.home") + File.separator + name + ".log"; 
+//		}
+		name = System.getProperty("user.home") + File.separator + name + ".log"; 
+		
 		return name;
 	}
 	public static void launchTestFramework() {

@@ -21,6 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import org.apache.batik.swing.*;
+import org.apache.batik.svggen.*;
+
 import org.joverseer.JOApplication;
 import org.joverseer.support.GameHolder;
 import org.joverseer.ui.map.MapMetadata;
@@ -39,7 +42,7 @@ import org.springframework.richclient.layout.TableLayoutBuilder;
 public class MapView extends AbstractView implements ApplicationListener {
 
 	MapPanel mapPanel;
-	JScrollPane scp;
+	JSVGScrollPane scp;
 	JLabel introLabel;
 
 	//injected dependencies
@@ -61,58 +64,26 @@ public class MapView extends AbstractView implements ApplicationListener {
 	protected JComponent createControl() {
 		// In this view, we're just going to use standard Swing to place a
 		// few controls.
-		this.scp = new JScrollPane(this.mapPanel = new MapPanel(this.gameHolder));
+		this.scp = new JSVGScrollPane(this.mapPanel = new MapPanel(this.gameHolder));
 		this.mapPanel.setFocusable(true);
-		this.mapPanel.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				if (arg0.getKeyCode() == KeyEvent.VK_UP) {
-					MapView.this.scp.getVerticalScrollBar().setValue(MapView.this.scp.getVerticalScrollBar().getValue() - MapView.this.scp.getVerticalScrollBar().getBlockIncrement());
-				}
-				if (arg0.getKeyCode() == KeyEvent.VK_DOWN) {
-					MapView.this.scp.getVerticalScrollBar().setValue(MapView.this.scp.getVerticalScrollBar().getValue() + MapView.this.scp.getVerticalScrollBar().getBlockIncrement());
-				}
-				if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
-					MapView.this.scp.getHorizontalScrollBar().setValue(MapView.this.scp.getHorizontalScrollBar().getValue() - MapView.this.scp.getHorizontalScrollBar().getBlockIncrement());
-				}
-				if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
-					MapView.this.scp.getHorizontalScrollBar().setValue(MapView.this.scp.getHorizontalScrollBar().getValue() + MapView.this.scp.getHorizontalScrollBar().getBlockIncrement());
-				}
-
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
 		this.mapPanel.setPreferredSize(new Dimension(1000, 2500));
 		this.mapPanel.setBackground(Color.white);
 		this.scp.setPreferredSize(new Dimension(800, 500));
 		MapMetadata mm = MapMetadata.instance();
-		this.scp.getVerticalScrollBar().setUnitIncrement(mm.getGridCellHeight() * mm.getHexSize() * 2);
-		this.scp.getHorizontalScrollBar().setUnitIncrement(mm.getGridCellWidth() * mm.getHexSize() * 2);
 		
 		// Add introduction image to explain to new players what to do
-		ImageSource is = JOApplication.getImageSource();
-		Image mapIntro = is.getImage("map.intro");
-		if (mapIntro != null) {
-			this.introLabel = new JLabel(new ImageIcon(mapIntro));
-			this.mapPanel.add(this.introLabel);
-		}
+//		ImageSource is = JOApplication.getImageSource();
+//		Image mapIntro = is.getImage("map.intro");
+//		if (mapIntro != null) {
+//			this.introLabel = new JLabel(new ImageIcon(mapIntro));
+//			this.mapPanel.add(this.introLabel);
+//		}
+//		
+//		
+//		TableLayoutBuilder tlb = new TableLayoutBuilder();
+//		tlb.cell(new JLabel(Messages.getString("MapView.NewGame"))); //$NON-NLS-1$
 		
 		
-		TableLayoutBuilder tlb = new TableLayoutBuilder();
-		tlb.cell(new JLabel(Messages.getString("MapView.NewGame"))); //$NON-NLS-1$
 		return this.scp;
 	}
 
@@ -162,8 +133,6 @@ public class MapView extends AbstractView implements ApplicationListener {
 		case MapMetadataChangedEvent:
 			MapMetadata mm = MapMetadata.instance();
 			this.mapPanel.setPreferredSize(new Dimension(mm.getGridCellWidth() * mm.getHexSize() * (mm.getMaxMapColumn() + 1), mm.getGridCellHeight() * mm.getHexSize() * mm.getMaxMapRow()));
-			this.scp.getVerticalScrollBar().setUnitIncrement(mm.getGridCellHeight() * mm.getHexSize() * 2);
-			this.scp.getHorizontalScrollBar().setUnitIncrement(mm.getGridCellWidth() * mm.getHexSize() * 2);
 			this.mapPanel.invalidateAndReset();
 			this.mapPanel.updateUI();
 			this.scp.updateUI();

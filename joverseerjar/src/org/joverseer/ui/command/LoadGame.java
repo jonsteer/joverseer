@@ -8,6 +8,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
+import org.apache.batik.swing.*;
 
 import org.joverseer.JOApplication;
 import org.joverseer.game.Game;
@@ -105,12 +106,12 @@ public class LoadGame extends ActionCommand {
                 JOApplication.publishEvent(LifecycleEventsEnum.GameLoadedEvent, g, g);
                 if (g.getParameter("horizontalMapScroll") != null) { //$NON-NLS-1$
                     MapPanel mp = MapPanel.instance();
-                    JScrollPane scp = (JScrollPane)mp.getParent().getParent();
+                    JSVGScrollPane scp = (JSVGScrollPane)mp.getParent();
                     try {
                         int hv = Integer.parseInt(g.getParameter("horizontalMapScroll")); //$NON-NLS-1$
                         int vv = Integer.parseInt(g.getParameter("verticalMapScroll")); //$NON-NLS-1$
-                        scp.getHorizontalScrollBar().setValue(hv);
-                        scp.getVerticalScrollBar().setValue(vv);
+//                        scp.getHorizontalScrollBar().setValue(hv);
+//                        scp.getVerticalScrollBar().setValue(vv);
                     }
                     catch (Exception exc) {
 

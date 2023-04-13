@@ -2,6 +2,8 @@ package org.joverseer.ui.map.renderers;
 
 import java.awt.*;
 
+import org.w3c.dom.svg.SVGDocument;
+
 /**
  * Interface for all renderers
  * 
@@ -9,7 +11,10 @@ import java.awt.*;
  */
 public interface Renderer {
 	public void refreshConfig();
-    public boolean appliesTo(Object ojb);
-
+    public boolean appliesTo(Object obj);
+	
+	public boolean isSVGReady();
+	
     public void render(Object obj, Graphics2D g, int x, int y);
+    public void render(Object obj, SVGDocument s, int x, int y);
 }

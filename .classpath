@@ -1,61 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="main/test" />
-	<classpathentry kind="src" path="main/resources" />
-	<classpathentry kind="src" path="main/java" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/JOverseerGameLibrary" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/JUnit" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Spring" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/PDFBox" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache HTTP Client" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/JGoodies Looks" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache Log4j" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache Commons Logger" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache Bean Utils" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache Collections" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/junit-3.8.1.jar" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/Apache Digester" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/JDom" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/ScopeHMVC" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/commons-codec-1.3.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/skinlf-1.2.11.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/swingx-0.8.0.jar" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="src" path="main/test"/>
+	<classpathentry kind="src" path="orderchecker/src"/>
+	<classpathentry kind="src" path="joverseerjar/src"/>
+	<classpathentry kind="src" path="txt2xmljar/src"/>
+	<classpathentry kind="src" path="main/resources"/>
+	<classpathentry kind="src" path="main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JOverseerGameLibrary"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Spring"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PDFBox"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache HTTP Client"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JGoodies Looks"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Log4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Commons Logger"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Bean Utils"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Collections"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Apache Digester"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ScopeHMVC"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="module" value="true" />
+			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-action.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-beaninfo.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-common-patched-swing-utils.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-components.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-dialogs.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-dock.jar" />
-	<classpathentry kind="lib"
-		path="C:/Users/talie/git/joverseer/joverseerjar/lib/jide-grids.jar" />
-	<classpathentry kind="output" path="classes" />
+	<classpathentry kind="lib" path="/joverseerjar/lib/assertj-core-3.8.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/assertj-swing-3.7.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/assertj-swing-junit-3.8.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-httpclient-3.0.1.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/flatlaf-3.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/FontBox-0.1.0-dev.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/forms-1.0.7.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-action.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-beaninfo.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-common.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-common-orig.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-common-patched-swing-utils.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-common-windows.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-components.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-dialogs.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-dock.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-grids.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/jide-oss-3.6.18.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/looks-2.0.4.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/PDFBox-0.7.3.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/skinlf-1.2.11.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-beans.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-binding-1.0.5.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-context.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-context-support.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-core.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/spring-richclient-full-1.0.0.jar" sourcepath="/joverseerjar/H:/projects/springrcp/spring-richclient/spring-richclient-core/src/main/java"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/swingx-0.8.0.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-all-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-anim-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-awt-util-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-bridge-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-codec-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-constants-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-css-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-dom-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-ext-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-extension-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-gui-util-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-gvt-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-i18n-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-parser-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-script-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-shared-resources-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-svgbrowser-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-svg-dom-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-svggen-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-svgrasterizer-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-swing-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-test-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-test-old-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-test-svg-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-test-swing-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-transcoder-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-util-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-util-1.16-tests.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/batik-xml-1.16.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/fop-transcoder-allinone-2.7.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/rhino-1.7.7.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/serializer-2.7.2.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/xml-apis-ext-1.3.04.jar"/>
+	<classpathentry kind="lib" path="/joverseerjar/lib/xmlgraphics-commons-2.7.jar"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
