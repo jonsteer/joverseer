@@ -15,7 +15,7 @@ import org.springframework.richclient.application.Application;
 public class MapMetadata {
 	int gridCellWidth;
 	int gridCellHeight;
-	int hexSize = 4;
+	int hexSize = 8;
 	int maxMapColumn;
 	int maxMapRow;
 	int minMapColumn = 1;

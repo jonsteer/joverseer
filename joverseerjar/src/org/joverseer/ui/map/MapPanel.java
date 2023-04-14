@@ -260,22 +260,28 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		this.map = this.mapBack;
 		Element svgRoot = this.map.getDocumentElement();
 
-		// Create the rectangle.
-		Element rectangle = this.map.createElementNS(this.svgNS, "rect");
-		rectangle.setAttributeNS(null, "x", "10");
-		rectangle.setAttributeNS(null, "y", "20");
-		rectangle.setAttributeNS(null, "width", "100");
-		rectangle.setAttributeNS(null, "height", "50");
-		rectangle.setAttributeNS(null, "fill", "red");
+//		// Create the rectangle.
+//		Element rectangle = this.map.createElementNS(this.svgNS, "rect");
+//		rectangle.setAttributeNS(null, "x", "10");
+//		rectangle.setAttributeNS(null, "y", "20");
+//		rectangle.setAttributeNS(null, "width", "100");
+//		rectangle.setAttributeNS(null, "height", "50");
+//		rectangle.setAttributeNS(null, "fill", "red");
+//
+//		// Attach the rectangle to the root 'svg' element.
+//		svgRoot.appendChild(rectangle);		
 
-		// Attach the rectangle to the root 'svg' element.
-		svgRoot.appendChild(rectangle);		
 
+		Element baseMap = this.map.createElementNS(this.svgNS, "g");
+		baseMap.setAttributeNS(null,"ID", "baseMap");
+		baseMap.setIdAttributeNS(null, "ID", true);
+		svgRoot.appendChild(baseMap);
 
-//		Element baseMap = this.map.createElementNS(this.svgNS, "g");
-//		baseMap.setAttribute("id", "basemap");
-//		svgRoot.appendChild(baseMap);
-
+		Element mapLabels = this.map.createElementNS(this.svgNS, "g");
+		mapLabels.setAttributeNS(null,"ID", "mapLabels");
+		mapLabels.setIdAttributeNS(null, "ID", true);
+		svgRoot.appendChild(mapLabels);		
+		
 		refreshRendersConfig();
 
 		for (Hex h : gm.getHexes()) {

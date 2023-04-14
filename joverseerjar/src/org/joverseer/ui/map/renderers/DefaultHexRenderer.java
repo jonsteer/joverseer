@@ -51,9 +51,6 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 	Color fordColor;
 	HashMap<MapOptionsEnum, Object> mapOptions;
 	
-	private DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-    private String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;	
-
 	private boolean useTexture;
 	
 	public DefaultHexRenderer() {
@@ -167,69 +164,123 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		return Color.white;
 	}
 
-	public void renderRoad(Graphics2D g, HexSideEnum side, int x, int y) {
-		Stroke s = g.getStroke();
-		Stroke r = new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	public void renderRoad(SVGDocument s, Element e, HexSideEnum side, int x, int y) {
 		Point sideCenter = getSideCenter(side);
 		Point center = new Point(this.hexCenter);
-		sideCenter.translate(x, y);
-		center.translate(x, y);
-		g.setColor(getRoadColor());
-		g.setStroke(r);
-		g.drawLine(center.x, center.y, sideCenter.x, sideCenter.y);
-		g.setStroke(s);
+		
+		Element r = s.createElementNS(this.svgNS, "line");
+		
+		r.setAttributeNS(null, "x1", "" + (center.x + x));
+		r.setAttributeNS(null, "y1", "" + (center.y + y));
+		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
+		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
+		
+		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getRoadColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "road");
+		
+		//TODO move to style sheets but inline style for now
+		r.setAttributeNS(null, "style", "stroke-width: 4;");
+		
+		e.appendChild(r);		
 
 	}
 
-	public void renderMajorRiver(Graphics2D g, HexSideEnum side, int x, int y) {
-		Stroke s = g.getStroke();
-		Stroke r = new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-		Polygon sp = getSidePolygon(side);
-		sp.translate(x, y);
-		g.setColor(getMajorRiverColor());
+	public void renderMajorRiver(SVGDocument s, Element e, HexSideEnum side, int x, int y) {
 
-		g.setStroke(r);
-		g.drawPolygon(sp);
-		g.setStroke(s);
+		int i = side.getSide();
+		
+		Element r = s.createElementNS(this.svgNS, "line");
+		r.setAttributeNS(null, "x1", "" + (x + this.xPoints[i - 1 % 6]));
+		r.setAttributeNS(null, "y1", "" + (y + this.yPoints[i - 1 % 6]));
+		r.setAttributeNS(null, "x2", "" + (x + this.xPoints[i % 6]));
+		r.setAttributeNS(null, "y2", "" + (y + this.yPoints[i % 6]));
+		
+		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMajorRiverColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "majorRiver");
+		
+		//TODO move to style sheets but inline style for now
+		r.setAttributeNS(null, "style", "stroke-width: 4;");
+		
+		e.appendChild(r);
+		
 	}
 
-	public void renderMinorRiver(Graphics2D g, HexSideEnum side, int x, int y) {
-		Stroke s = g.getStroke();
-		Stroke r = new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-		Polygon sp = getSidePolygon(side);
-		sp.translate(x, y);
-		g.setColor(getMinorRiverColor());
-		g.setStroke(r);
-		g.drawPolygon(sp);
-		g.setStroke(s);
+	public void renderMinorRiver(SVGDocument s, Element e, HexSideEnum side, int x, int y) {
+		
+		int i = side.getSide();
+		
+		Element r = s.createElementNS(this.svgNS, "line");
+		r.setAttributeNS(null, "x1", "" + (x + this.xPoints[i - 1 % 6]));
+		r.setAttributeNS(null, "y1", "" + (y + this.yPoints[i - 1 % 6]));
+		r.setAttributeNS(null, "x2", "" + (x + this.xPoints[i % 6]));
+		r.setAttributeNS(null, "y2", "" + (y + this.yPoints[i % 6]));
+		
+		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMinorRiverColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "majorRiver");
+		
+		//TODO move to style sheets but inline style for now
+		r.setAttributeNS(null, "style", "stroke-width: 3;");	
+		
+		e.appendChild(r);	
+
 	}
 
-	public void renderBridge(Graphics2D g, HexSideEnum side, int x, int y) {
-		Stroke s = g.getStroke();
-		Stroke r = new BasicStroke(6);
+	public void renderBridge(SVGDocument s, Element e, HexSideEnum side, int x, int y) {
+//		Stroke s = g.getStroke();
+//		Stroke r = new BasicStroke(6);
 		Point sideCenter = getSideCenter(side);
 		Point center = new Point(this.hexCenter);
 		Point start = new Point((center.x + 2 * sideCenter.x) / 3, (center.y + 2 * sideCenter.y) / 3);
-		start.translate(x, y);
-		sideCenter.translate(x, y);
-		g.setColor(getBridgeColor());
-		g.setStroke(r);
-		g.drawLine(start.x, start.y, sideCenter.x, sideCenter.y);
-		g.setStroke(s);
+//		start.translate(x, y);
+//		sideCenter.translate(x, y);
+//		g.setColor(getBridgeColor());
+//		g.setStroke(r);
+//		g.drawLine(start.x, start.y, sideCenter.x, sideCenter.y);
+//		g.setStroke(s);
+		
+		Element r = s.createElementNS(this.svgNS, "line");
+		
+		r.setAttributeNS(null, "x1", "" + (start.x + x));
+		r.setAttributeNS(null, "y1", "" + (start.y + y));
+		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
+		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
+		
+		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getBridgeColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "bridge");
+		
+		//TODO move to style sheets but inline style for now
+		r.setAttributeNS(null, "style", "stroke-width: 6;");
+		
+		e.appendChild(r);	
 	}
 
-	public void renderFord(Graphics2D g, HexSideEnum side, int x, int y) {
-		Stroke s = g.getStroke();
-		Stroke r = new BasicStroke(6);
+	public void renderFord(SVGDocument s, Element e, HexSideEnum side, int x, int y) {
+//		Stroke s = g.getStroke();
+//		Stroke r = new BasicStroke(6);
 		Point sideCenter = getSideCenter(side);
 		Point center = new Point(this.hexCenter);
 		Point start = new Point((center.x + 2 * sideCenter.x) / 3, (center.y + 2 * sideCenter.y) / 3);
-		start.translate(x, y);
-		sideCenter.translate(x, y);
-		g.setColor(getFordColor());
-		g.setStroke(r);
-		g.drawLine(start.x, start.y, sideCenter.x, sideCenter.y);
-		g.setStroke(s);
+//		start.translate(x, y);
+//		sideCenter.translate(x, y);
+//		g.setColor(getFordColor());
+//		g.setStroke(r);
+//		g.drawLine(start.x, start.y, sideCenter.x, sideCenter.y);
+//		g.setStroke(s);
+		
+		Element r = s.createElementNS(this.svgNS, "line");
+		
+		r.setAttributeNS(null, "x1", "" + (start.x + x));
+		r.setAttributeNS(null, "y1", "" + (start.y + y));
+		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
+		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
+		
+		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getFordColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "ford");
+		
+		//TODO move to style sheets but inline style for now
+		r.setAttributeNS(null, "style", "stroke-width: 6;");
+		
+		e.appendChild(r);			
 	}
 
 
@@ -258,8 +309,15 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 //      g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 //      g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 //      g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        
+
+		Element hexGroup = s.createElementNS(this.svgNS, "g");
+		hexGroup.setAttributeNS(null,"ID", "hex_group_"+hex.getHexNoStr());
+		hexGroup.setIdAttributeNS(null, "ID", true);
+		
+		
 		Element svghex = s.createElementNS(this.svgNS, "polygon");
+		svghex.setAttributeNS(null,"ID", "hex_"+hex.getHexNoStr());
+		svghex.setIdAttributeNS(null, "ID", true);
 		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
 		
 		if (this.useTexture) {
@@ -267,36 +325,39 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		}
 		
 		svghex.setAttributeNS(null, "fill", "#"+Integer.toHexString(getColor(hex).getRGB()).substring(2));
+		svghex.setAttributeNS(null, "stroke", "#000000");
 
-		Element svgRoot = s.getDocumentElement();
-		svgRoot.appendChild(svghex);
+		//Element svgRoot = s.getDocumentElement();
+		Element baseMap = s.getElementById("baseMap");
+		hexGroup.appendChild(svghex);
 		
-//		for (HexSideEnum side : HexSideEnum.values()) {
-//			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
-//			if (elements.size() > 0) {
-//				if (elements.contains(HexSideElementEnum.MajorRiver)) {
-//					renderMajorRiver(g, side, x, y);
-//				} else if (elements.contains(HexSideElementEnum.MinorRiver)) {
-//					renderMinorRiver(g, side, x, y);
-//				}
-//				;
-//				if (elements.contains(HexSideElementEnum.Road)) {
-//					renderRoad(g, side, x, y);
-//				}
-//				;
-//				if (elements.contains(HexSideElementEnum.Bridge)) {
-//					renderBridge(g, side, x, y);
-//				}
-//				;
-//				if (elements.contains(HexSideElementEnum.Ford)) {
-//					renderFord(g, side, x, y);
-//				}
-//				;
-//
-//			}
-//		}
-		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		
+		for (HexSideEnum side : HexSideEnum.values()) {
+			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
+			if (elements.size() > 0) {
+				if (elements.contains(HexSideElementEnum.MajorRiver)) {
+					renderMajorRiver(s, hexGroup, side, x, y);
+				} else if (elements.contains(HexSideElementEnum.MinorRiver)) {
+					renderMinorRiver(s, hexGroup, side, x, y);
+				}
+				;
+				if (elements.contains(HexSideElementEnum.Road)) {
+					renderRoad(s, hexGroup, side, x, y);
+				}
+				;
+				if (elements.contains(HexSideElementEnum.Bridge)) {
+					renderBridge(s, hexGroup, side, x, y);
+				}
+				;
+				if (elements.contains(HexSideElementEnum.Ford)) {
+					renderFord(s, hexGroup, side, x, y);
+				}
+				;
 
+			}
+		}
+		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		baseMap.appendChild(hexGroup);
 	}
 
 	public void setTerrainColor(HexTerrainEnum terrain, Color c) {

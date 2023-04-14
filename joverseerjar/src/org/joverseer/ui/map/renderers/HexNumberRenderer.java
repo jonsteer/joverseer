@@ -1,6 +1,9 @@
 package org.joverseer.ui.map.renderers;
 
 import org.joverseer.metadata.domain.Hex;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGDocument;
+
 import java.awt.*;
 
 /**
@@ -13,6 +16,11 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
     String fontName = "SansSerif";
     int fontSize = 8;
     int fontStyle = Font.PLAIN;
+    
+    @Override
+    public boolean isSVGReady() {
+    	return true;
+    }	    
 
     public HexNumberRenderer() {
     }
@@ -23,7 +31,7 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
     }
     
     @Override
-	public void render(Object obj, Graphics2D g, int x, int y) {
+	public void render(Object obj, SVGDocument s, int x, int y) {
         if (!appliesTo(obj)) {
             throw new IllegalArgumentException(obj.toString());
         }
@@ -64,22 +72,36 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
         	break;
         }
         //Font f = new Font(this.fontName, this.fontStyle, this.mapMetadata.getGridCellWidth() < 10 ? 7 : this.fontSize);
+        this.fontSize *= 2;
         
         Font f = new Font(this.fontName, this.fontStyle, this.fontSize);
         String hexNo = hex.getHexNoStr();
-        
-        int w = ((Number)f.getStringBounds(hexNo, g.getFontRenderContext()).getWidth()).intValue();
 
-        
-        x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2 - w / 2 + x;
+        x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2 + x;
         y = this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 4 + y;
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g.setFont(f);
-        g.setColor(Color.black);
-        g.drawString(hexNo, x, y);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//
+//        g.setFont(f);
+//        g.setColor(Color.black);
+//        g.drawString(hexNo, x, y);
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        
+        Element t = s.createElementNS(this.svgNS, "text");
+        t.setAttributeNS(null, "x", ""+x);
+        t.setAttributeNS(null, "y", ""+y);
+        t.setAttributeNS(null, "text-anchor", "middle");
+        
+        t.setAttributeNS(null, "class", "hexnumber");
+        //TODO replace style with stylesheet
+        t.setAttributeNS(null, "style", "font: "+this.fontSize+"px sans-serif; fill: black;");
+        
+        t.setTextContent(hexNo);
+        
+        Element mapLabels = s.getElementById("mapLabels");
+        mapLabels.appendChild(t);
+        
+        
     }
 
     public String getFontName() {
