@@ -331,6 +331,8 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		Element baseMap = s.getElementById("baseMap");
 		hexGroup.appendChild(svghex);
 		
+		Element bridgesFords = s.getElementById("bridgesFords");
+		
 		
 		for (HexSideEnum side : HexSideEnum.values()) {
 			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
@@ -346,11 +348,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 				}
 				;
 				if (elements.contains(HexSideElementEnum.Bridge)) {
-					renderBridge(s, hexGroup, side, x, y);
+					renderBridge(s, bridgesFords, side, x, y);
 				}
 				;
 				if (elements.contains(HexSideElementEnum.Ford)) {
-					renderFord(s, hexGroup, side, x, y);
+					renderFord(s, bridgesFords, side, x, y);
 				}
 				;
 

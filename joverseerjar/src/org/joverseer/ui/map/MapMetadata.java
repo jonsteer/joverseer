@@ -24,7 +24,8 @@ public class MapMetadata {
 	ArrayList<Renderer> renderers = new ArrayList<Renderer>();
 
 	public int getGridCellHeight() {
-		return this.gridCellHeight;
+		//return this.gridCellHeight;
+		return 12;
 	}
 
 	public void setGridCellHeight(int gridCellHeight) {
@@ -32,7 +33,8 @@ public class MapMetadata {
 	}
 
 	public int getGridCellWidth() {
-		return this.gridCellWidth;
+		//return this.gridCellWidth;
+		return 12;
 	}
 
 	public void setGridCellWidth(int gridCellWidth) {

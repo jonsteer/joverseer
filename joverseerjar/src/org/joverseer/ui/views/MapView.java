@@ -42,7 +42,7 @@ import org.springframework.richclient.layout.TableLayoutBuilder;
 public class MapView extends AbstractView implements ApplicationListener {
 
 	MapPanel mapPanel;
-	JSVGScrollPane scp;
+	JScrollPane scp;
 	JLabel introLabel;
 
 	//injected dependencies
@@ -64,7 +64,7 @@ public class MapView extends AbstractView implements ApplicationListener {
 	protected JComponent createControl() {
 		// In this view, we're just going to use standard Swing to place a
 		// few controls.
-		this.scp = new JSVGScrollPane(this.mapPanel = new MapPanel(this.gameHolder));
+		this.scp = new JScrollPane(this.mapPanel = new MapPanel(this.gameHolder));
 		this.mapPanel.setFocusable(true);
 		this.mapPanel.setPreferredSize(new Dimension(1000, 2500));
 		this.mapPanel.setBackground(Color.white);
@@ -102,7 +102,7 @@ public class MapView extends AbstractView implements ApplicationListener {
 		case GameChangedEvent:
 		case SelectedTurnChangedEvent:
 		case RefreshTurnMapItems:
-			this.mapPanel.remove(this.introLabel);
+			//this.mapPanel.remove(this.introLabel);
 			this.mapPanel.invalidateAll();
 			this.mapPanel.updateUI();
 			break;

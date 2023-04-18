@@ -106,7 +106,7 @@ public class LoadGame extends ActionCommand {
                 JOApplication.publishEvent(LifecycleEventsEnum.GameLoadedEvent, g, g);
                 if (g.getParameter("horizontalMapScroll") != null) { //$NON-NLS-1$
                     MapPanel mp = MapPanel.instance();
-                    JSVGScrollPane scp = (JSVGScrollPane)mp.getParent();
+                    JScrollPane scp = mp.getParent();
                     try {
                         int hv = Integer.parseInt(g.getParameter("horizontalMapScroll")); //$NON-NLS-1$
                         int vv = Integer.parseInt(g.getParameter("verticalMapScroll")); //$NON-NLS-1$

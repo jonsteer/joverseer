@@ -39,20 +39,14 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
         Hex hex = (Hex)obj;
         if (!this.mapMetadata.withinMapRange(hex)) return;
         //set font size based on cell width:
-        this.fontSize = this.mapMetadata.getGridCellWidth();
+        //this.fontSize = this.mapMetadata.getGridCellWidth();
+        this.fontSize = 12;
 
         String hexNo = hex.getHexNoStr();
 
         x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2 + x;
         y = this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 4 + y;
-
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//
-//        g.setFont(f);
-//        g.setColor(Color.black);
-//        g.drawString(hexNo, x, y);
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-        
+ 
         Element t = s.createElementNS(this.svgNS, "text");
         t.setAttributeNS(null, "x", ""+x);
         t.setAttributeNS(null, "y", ""+y);
