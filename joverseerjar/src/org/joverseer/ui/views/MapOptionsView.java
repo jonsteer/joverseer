@@ -254,8 +254,8 @@ public class MapOptionsView extends ScalableAbstractView implements ApplicationL
 		});
 		lb.row();
 		lb.cell(label = new JLabel(Messages.getString("MapOptionsView.ZoomLevelColon"))); //$NON-NLS-1$
-		ZoomOption[] zoomOptions = new ZoomOption[] { new ZoomOption("s1", 6, 6), new ZoomOption("s2", 7, 7), new ZoomOption("s3", 9, 9), new ZoomOption("s4", 11, 11), new ZoomOption("1", 13, 13), new ZoomOption("2", 15, 15), new ZoomOption("3", 17, 17), new ZoomOption("4", 19, 19),//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-				new ZoomOption("5", 21, 21),new ZoomOption("6", 23, 23),
+		ZoomOption[] zoomOptions = new ZoomOption[] { new ZoomOption("25%", 0.25, 0.25), new ZoomOption("50%", 0.5, 0.5), new ZoomOption("75%", 0.75, 0.75), new ZoomOption("100%", 1, 1), new ZoomOption("150%", 1.50, 1.50), new ZoomOption("200%", 2, 2), new ZoomOption("300%", 3, 3),//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+				
 				}; 
 		lb.cell(this.zoom = new JComboBox(zoomOptions), "align=left"); //$NON-NLS-1$
 		lb.relatedGapRow();
@@ -268,24 +268,30 @@ public class MapOptionsView extends ScalableAbstractView implements ApplicationL
 
 				if (opt == null)
 					return;
-				MapMetadata metadata = MapMetadata.instance();
-				metadata.setGridCellHeight(opt.getHeight());
-				metadata.setGridCellWidth(opt.getWidth());
+				
+				if (MapPanel.instance() != null) { 
+					MapPanel.instance().zoomMap(opt.getHeight());
+				}
+//				MapMetadata metadata = MapMetadata.instance();
+//				metadata.setGridCellHeight(opt.getHeight());
+//				metadata.setGridCellWidth(opt.getWidth());
 				
 				if (!MapOptionsView.this.fireEvents)
 					return;
 
-				JOApplication.publishEvent(LifecycleEventsEnum.MapMetadataChangedEvent, this, this);
+				//JOApplication.publishEvent(LifecycleEventsEnum.MapMetadataChangedEvent, this, this);
 			}
 		});
 		String temp = PreferenceRegistry.instance().getPreferenceValue("map.defaultZoom");
 		int defaultZoomIndex;
-		try {
-			defaultZoomIndex = Integer.parseInt(temp);
-	
-		}catch (NumberFormatException e) {
-			defaultZoomIndex= 6; // zoom level 3
-		}
+//		try {
+//			defaultZoomIndex = Integer.parseInt(temp);
+//			if (defaultZoomIndex > 6) {
+//				defaultZoomIndex = 3;
+//			}
+//		}catch (NumberFormatException e) {
+			defaultZoomIndex= 3; // zoom level 3
+//		}
 		this.zoom.setSelectedIndex(defaultZoomIndex);
 		lb.row();
 		lb.cell(label = new JLabel(Messages.getString("MapOptionsView.NationColoursColon"))); //$NON-NLS-1$
@@ -410,10 +416,10 @@ public class MapOptionsView extends ScalableAbstractView implements ApplicationL
 
 	class ZoomOption {
 		String description;
-		int width;
-		int height;
+		double width;
+		double height;
 
-		public ZoomOption(String description, int width, int height) {
+		public ZoomOption(String description, double width, double height) {
 			super();
 			this.description = description;
 			this.width = width;
@@ -429,11 +435,11 @@ public class MapOptionsView extends ScalableAbstractView implements ApplicationL
 			return this.description;
 		}
 
-		public int getHeight() {
+		public double getHeight() {
 			return this.height;
 		}
 
-		public int getWidth() {
+		public double getWidth() {
 			return this.width;
 		}
 

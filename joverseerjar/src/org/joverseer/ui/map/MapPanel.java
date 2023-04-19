@@ -23,7 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
+
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
@@ -77,6 +81,8 @@ import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.*;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * The basic control for displaying the map. It derives itself from a JPanel and
@@ -136,6 +142,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	private Game game = null;
 
 	int xDiff, yDiff;
+	
+	double scale = 1;
 
 	boolean isDragging;
 
@@ -242,23 +250,22 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 			return;
 
 		GameMetadata gm = game1.getMetadata();
-
-		if (this.mapBack == null) {
-			Dimension d = getMapDimension();
-			
-			this.mapBack = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
-			// Get the root element (the 'svg' element).
-			Element svgRoot = this.mapBack.getDocumentElement();
-
-			// Set the width and height attributes on the root 'svg' element.
-			svgRoot.setAttributeNS(null, "width", d.getWidth()+"");
-			svgRoot.setAttributeNS(null, "height", d.getHeight()+"");			
-			//this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			this.setPreferredSize(d);
-			this.setSize(d);
+		
+		if (this.map == null) {		
+			this.map = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
 		}
-		this.map = this.mapBack;
-		Element svgRoot = this.map.getDocumentElement();
+		
+		Dimension d = getMapDimension();
+
+		Element svgRoot = this.map.getDocumentElement();		
+		// Set the width and height attributes on the root 'svg' element.
+		//svgRoot.setAttributeNS(null, "width", d.getWidth()+"");
+		//svgRoot.setAttributeNS(null, "height", d.getHeight()+"");	
+		svgRoot.setAttributeNS(null, "viewBox", "0 0 "+d.getWidth()+" "+d.getHeight());	
+		//this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		this.setPreferredSize(d);
+		this.setSize(d);
+
 	
 		Element baseMap = this.map.createElementNS(this.svgNS, "g");
 		baseMap.setAttributeNS(null,"ID", "baseMap");
@@ -310,9 +317,9 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	public static void saveSvgDocumentToFile(SVGDocument document, File file)
 	        throws FileNotFoundException, IOException {
 	    SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-	    try (Writer out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
-	        svgGenerator.stream(document.getDocumentElement(), out);
-	    }
+	    //try (Writer out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
+	    //    svgGenerator.stream(document.getDocumentElement(), out);
+	    //}
 	}	
 
 	public Dimension getMapDimension() {
@@ -641,6 +648,21 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 //		}
 //
 //	}
+	
+	public void zoomMap(double scale) {
+		if (scale == 999) {
+			//zoom to fit
+		}
+		else {
+			JScrollPane scp = (JScrollPane) this.getParent().getParent();
+			
+			Dimension2D s = this.getSVGDocumentSize();
+			this.setMySize(new Dimension((int) Math.round(s.getWidth() * scale), (int) Math.round(s.getHeight() * scale)));
+
+			this.scale = scale;
+			scp.setViewportView(this);
+		}
+	}
 
 	public Point getSelectedHex() {
 		return this.selectedHex;
@@ -674,13 +696,21 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	 */
 	private Point getHexFromPoint(Point p) {
 		MapMetadata metadata1 = MapMetadata.instance();
-		int y = p.y / (metadata1.getHexSize() * 3 / 4 * metadata1.getGridCellHeight());
+//		int y = p.y / (metadata1.getHexSize() * 3 / 4 * metadata1.getGridCellHeight());
+//		int x;
+//		if ((y + metadata1.getMinMapRow() + 1) % 2 == 0) {
+//			x = p.x / (metadata1.getHexSize() * metadata1.getGridCellWidth());
+//		} else {
+//			x = (p.x - metadata1.getHexSize() / 2 * metadata1.getGridCellWidth()) / (metadata1.getHexSize() * metadata1.getGridCellWidth());
+//		}
+		
+		int y = (int) (p.y / (metadata1.getHexSize() * 3 / 4 * metadata1.getGridCellHeight() * this.scale));
 		int x;
 		if ((y + metadata1.getMinMapRow() + 1) % 2 == 0) {
-			x = p.x / (metadata1.getHexSize() * metadata1.getGridCellWidth());
+			x = (int) (p.x / (metadata1.getHexSize() * metadata1.getGridCellWidth() * this.scale));
 		} else {
-			x = (p.x - metadata1.getHexSize() / 2 * metadata1.getGridCellWidth()) / (metadata1.getHexSize() * metadata1.getGridCellWidth());
-		}
+			x = (int) ((p.x - metadata1.getHexSize() / 2 * metadata1.getGridCellWidth() * this.scale) / (metadata1.getHexSize() * metadata1.getGridCellWidth() * this.scale));
+		}		
 		x += metadata1.getMinMapColumn();
 		y += metadata1.getMinMapRow();
 		if (x > metadata1.getMaxMapColumn())
@@ -938,7 +968,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	}
 
 	public SVGDocument getMapImage() {
-		return this.mapItems;
+		return this.map;
 	}
 
 	public String getHex() {
@@ -954,7 +984,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	};
 
 	public SVGDocument getMap() {
-		return this.mapItems;
+		return this.map;
 	}
 
 	class MapPanelDropTargetAdapter extends DropTargetAdapter {
