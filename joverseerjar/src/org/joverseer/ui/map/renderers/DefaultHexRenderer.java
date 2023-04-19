@@ -175,11 +175,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
 		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
 		
-		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getRoadColor().getRGB()).substring(2));
+		//r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getRoadColor().getRGB()).substring(2));
 		r.setAttributeNS(null, "class", "road");
 		
 		//TODO move to style sheets but inline style for now
-		r.setAttributeNS(null, "style", "stroke-width: 4;");
+		//r.setAttributeNS(null, "style", "stroke-width: 4;");
 		
 		e.appendChild(r);		
 
@@ -195,11 +195,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		r.setAttributeNS(null, "x2", "" + (x + this.xPoints[i % 6]));
 		r.setAttributeNS(null, "y2", "" + (y + this.yPoints[i % 6]));
 		
-		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMajorRiverColor().getRGB()).substring(2));
+		//r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMajorRiverColor().getRGB()).substring(2));
 		r.setAttributeNS(null, "class", "majorRiver");
 		
 		//TODO move to style sheets but inline style for now
-		r.setAttributeNS(null, "style", "stroke-width: 4;");
+		//r.setAttributeNS(null, "style", "stroke-width: 4;");
 		
 		e.appendChild(r);
 		
@@ -215,11 +215,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		r.setAttributeNS(null, "x2", "" + (x + this.xPoints[i % 6]));
 		r.setAttributeNS(null, "y2", "" + (y + this.yPoints[i % 6]));
 		
-		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMinorRiverColor().getRGB()).substring(2));
-		r.setAttributeNS(null, "class", "majorRiver");
+		//r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getMinorRiverColor().getRGB()).substring(2));
+		r.setAttributeNS(null, "class", "minorRiver");
 		
 		//TODO move to style sheets but inline style for now
-		r.setAttributeNS(null, "style", "stroke-width: 3;");	
+		//r.setAttributeNS(null, "style", "stroke-width: 3;");	
 		
 		e.appendChild(r);	
 
@@ -245,11 +245,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
 		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
 		
-		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getBridgeColor().getRGB()).substring(2));
+		//r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getBridgeColor().getRGB()).substring(2));
 		r.setAttributeNS(null, "class", "bridge");
 		
 		//TODO move to style sheets but inline style for now
-		r.setAttributeNS(null, "style", "stroke-width: 6;");
+		//r.setAttributeNS(null, "style", "stroke-width: 6;");
 		
 		e.appendChild(r);	
 	}
@@ -274,11 +274,11 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		r.setAttributeNS(null, "x2", "" + (sideCenter.x + x));
 		r.setAttributeNS(null, "y2", "" + (sideCenter.y + y));
 		
-		r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getFordColor().getRGB()).substring(2));
+		//r.setAttributeNS(null, "stroke", "#"+Integer.toHexString(getFordColor().getRGB()).substring(2));
 		r.setAttributeNS(null, "class", "ford");
 		
 		//TODO move to style sheets but inline style for now
-		r.setAttributeNS(null, "style", "stroke-width: 6;");
+		//r.setAttributeNS(null, "style", "stroke-width: 6;");
 		
 		e.appendChild(r);			
 	}

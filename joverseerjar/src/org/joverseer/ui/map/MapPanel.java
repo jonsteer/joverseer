@@ -78,6 +78,7 @@ import org.springframework.richclient.dialog.ConfirmationDialog;
 import org.springframework.richclient.progress.BusyIndicator;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGStyleElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.*;
@@ -229,6 +230,21 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		}
 
 	}
+	
+	private SVGStyleElement createStyleSheet(SVGDocument s) {
+		SVGStyleElement styleSheet = (SVGStyleElement) s.createElementNS(this.svgNS, "style");
+		styleSheet.setAttributeNS(null, "type", "text/css");
+		
+		styleSheet.appendChild(s.createCDATASection("line.road { stroke: #9a9a9a; stroke-width: 4; }"));
+		styleSheet.appendChild(s.createCDATASection("line.majorRiver { stroke: #1067ac; stroke-width: 4; }"));
+		styleSheet.appendChild(s.createCDATASection("line.minorRiver { stroke: #008adf; stroke-width: 3; }"));
+		styleSheet.appendChild(s.createCDATASection("line.ford { stroke: #0f2f2f; stroke-width: 6; }"));
+		styleSheet.appendChild(s.createCDATASection("line.bridge { stroke: #885500; stroke-width: 6; }"));
+		styleSheet.appendChild(s.createCDATASection(".hexnumber { font: bold 12px sans-serif; fill: black; text-anchor: middle; }"));
+		
+		
+		return styleSheet;
+	}
 
 	/**
 	 * Creates the basic map (the background layer with the hexes) The hexes are
@@ -266,6 +282,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		this.setPreferredSize(d);
 		this.setSize(d);
 
+		SVGStyleElement styleSheet = this.createStyleSheet(this.map);
+		svgRoot.appendChild(styleSheet);
 	
 		Element baseMap = this.map.createElementNS(this.svgNS, "g");
 		baseMap.setAttributeNS(null,"ID", "baseMap");
