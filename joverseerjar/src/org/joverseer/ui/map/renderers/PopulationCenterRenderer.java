@@ -76,7 +76,7 @@ public class PopulationCenterRenderer extends SVGRenderer {
 //        BufferedImage img = copyImage(pcImage);
         
         String pcCode = popCenter.getSize().toString();
-        pcCode = "camp";
+        //pcCode = "camp";
         
         Element pcElement = s.mapdoc.createElementNS(this.svgNS, "use");
         pcElement.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#"+pcCode);
