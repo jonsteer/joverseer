@@ -2,6 +2,7 @@ package org.joverseer.ui.map.renderers;
 
 import java.awt.*;
 
+import org.joverseer.ui.map.JOSVGMap;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -16,5 +17,5 @@ public interface Renderer {
 	public boolean isSVGReady();
 	
     public void render(Object obj, Graphics2D g, int x, int y);
-    public void render(Object obj, SVGDocument s, int x, int y);
+    public void render(Object obj, JOSVGMap s, int x, int y);
 }

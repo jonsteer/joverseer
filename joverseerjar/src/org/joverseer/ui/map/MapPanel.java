@@ -40,6 +40,7 @@ import org.joverseer.JOApplication;
 import org.joverseer.domain.Army;
 import org.joverseer.domain.Artifact;
 import org.joverseer.domain.Character;
+import org.joverseer.domain.PopulationCenter;
 import org.joverseer.game.Game;
 import org.joverseer.game.Turn;
 import org.joverseer.metadata.GameMetadata;
@@ -77,6 +78,7 @@ import org.springframework.richclient.command.CommandGroup;
 import org.springframework.richclient.dialog.ConfirmationDialog;
 import org.springframework.richclient.progress.BusyIndicator;
 import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.svg.SVGDefsElement;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGStyleElement;
 import org.w3c.dom.Document;
@@ -126,7 +128,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	Point location = new Point();
 	boolean outOfMemoryErrorThrown = false;
 
-	SVGDocument map = null;
+	JOSVGMap map = null;
 	SVGDocument mapBaseItems = null;
 	SVGDocument mapItems = null;
 	SVGDocument mapBack = null;
@@ -231,20 +233,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 
 	}
 	
-	private SVGStyleElement createStyleSheet(SVGDocument s) {
-		SVGStyleElement styleSheet = (SVGStyleElement) s.createElementNS(this.svgNS, "style");
-		styleSheet.setAttributeNS(null, "type", "text/css");
-		
-		styleSheet.appendChild(s.createCDATASection("line.road { stroke: #9a9a9a; stroke-width: 4; }"));
-		styleSheet.appendChild(s.createCDATASection("line.majorRiver { stroke: #1067ac; stroke-width: 4; }"));
-		styleSheet.appendChild(s.createCDATASection("line.minorRiver { stroke: #008adf; stroke-width: 3; }"));
-		styleSheet.appendChild(s.createCDATASection("line.ford { stroke: #0f2f2f; stroke-width: 6; }"));
-		styleSheet.appendChild(s.createCDATASection("line.bridge { stroke: #885500; stroke-width: 6; }"));
-		styleSheet.appendChild(s.createCDATASection(".hexnumber { font: bold 12px sans-serif; fill: black; text-anchor: middle; }"));
-		
-		
-		return styleSheet;
-	}
+
+
 
 	/**
 	 * Creates the basic map (the background layer with the hexes) The hexes are
@@ -268,12 +258,12 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		GameMetadata gm = game1.getMetadata();
 		
 		if (this.map == null) {		
-			this.map = (SVGDocument) this.impl.createDocument(this.svgNS, "svg", null);
+			this.map = new JOSVGMap();
 		}
 		
 		Dimension d = getMapDimension();
 
-		Element svgRoot = this.map.getDocumentElement();		
+		Element svgRoot = this.map.getRoot();		
 		// Set the width and height attributes on the root 'svg' element.
 		//svgRoot.setAttributeNS(null, "width", d.getWidth()+"");
 		//svgRoot.setAttributeNS(null, "height", d.getHeight()+"");	
@@ -281,24 +271,14 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		//this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		this.setPreferredSize(d);
 		this.setSize(d);
-
-		SVGStyleElement styleSheet = this.createStyleSheet(this.map);
-		svgRoot.appendChild(styleSheet);
-	
-		Element baseMap = this.map.createElementNS(this.svgNS, "g");
-		baseMap.setAttributeNS(null,"ID", "baseMap");
-		baseMap.setIdAttributeNS(null, "ID", true);
-		svgRoot.appendChild(baseMap);
 		
-		Element bridgesFords = this.map.createElementNS(this.svgNS, "g");
-		bridgesFords.setAttributeNS(null,"ID", "bridgesFords");
-		bridgesFords.setIdAttributeNS(null, "ID", true);
-		svgRoot.appendChild(bridgesFords);
-
-		Element mapLabels = this.map.createElementNS(this.svgNS, "g");
-		mapLabels.setAttributeNS(null,"ID", "mapLabels");
-		mapLabels.setIdAttributeNS(null, "ID", true);
-		svgRoot.appendChild(mapLabels);		
+		this.map.setupDefs();
+		this.map.setupStyleSheet();
+	
+		this.map.createGroup("baseMap");
+		this.map.createGroup("bridgesFords");
+		this.map.createGroup("popCenters");
+		this.map.createGroup("mapLabels");
 		
 		refreshRendersConfig();
 
@@ -319,18 +299,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 				}
 			}
 		}
-
-		if (this.saveMap) {
-			File outputFile = new File("map.svg"); //$NON-NLS-1$
-			try {
-				saveSvgDocumentToFile(this.map, outputFile);
-				
-			} catch (Exception exc) {
-			}
-			;
-		}
 		
-		this.setSVGDocument(this.map);		
+		this.setSVGDocument(this.map.mapdoc);		
 	}
 	public static void saveSvgDocumentToFile(SVGDocument document, File file)
 	        throws FileNotFoundException, IOException {
@@ -456,23 +426,23 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		}
 		//g.drawImage(this.map, 0, 0, this);
 
-//		try {
-//			for (PopulationCenter pc : getGame().getTurn().getPopulationCenters()) {
-//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-//					if (r.appliesTo(pc)) {
-//						setHexLocation(pc.getX(), pc.getY());
-//						try {
-//							r.render(pc, g, this.location.x, this.location.y);
-//						} catch (Exception exc) {
-//							logger.error("Error pc " + pc.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-//						}
-//
-//					}
-//				}
-//			}
-//		} catch (Exception exc) {
-//			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
-//		}
+		try {
+			for (PopulationCenter pc : getGame().getTurn().getPopulationCenters()) {
+				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+					if (r.appliesTo(pc) && r.isSVGReady()) {
+						setHexLocation(pc.getX(), pc.getY());
+						try {
+							r.render(pc, this.map, this.location.x, this.location.y);
+						} catch (Exception exc) {
+							logger.error("Error pc " + pc.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+
+					}
+				}
+			}
+		} catch (Exception exc) {
+			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
+		}
 //
 //		try {
 //			for (Character c1 : getGame().getTurn().getCharacters()) {
@@ -986,7 +956,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	}
 
 	public SVGDocument getMapImage() {
-		return this.map;
+		return this.map.mapdoc;
 	}
 
 	public String getHex() {
@@ -1002,7 +972,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 	};
 
 	public SVGDocument getMap() {
-		return this.map;
+		return this.map.mapdoc;
 	}
 
 	class MapPanelDropTargetAdapter extends DropTargetAdapter {

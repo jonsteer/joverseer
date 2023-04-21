@@ -20,6 +20,7 @@ import org.joverseer.metadata.domain.HexTerrainEnum;
 import org.joverseer.preferences.PreferenceRegistry;
 import org.joverseer.ui.LifecycleEventsEnum;
 import org.joverseer.ui.domain.mapOptions.MapOptionsEnum;
+import org.joverseer.ui.map.JOSVGMap;
 import org.joverseer.ui.support.JOverseerEvent;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -28,6 +29,7 @@ import org.springframework.richclient.application.Application;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGElement;
 
 /**
  * Renders a hex (terrain, sides, etc)
@@ -286,7 +288,7 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 
 
 	@Override
-	public void render(Object obj, SVGDocument s, int x, int y) {
+	public void render(Object obj, JOSVGMap s, int x, int y) {
 		if (!appliesTo(obj)) {
 			throw new IllegalArgumentException(obj.toString());
 		}
@@ -295,7 +297,9 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		if (!this.mapMetadata.withinMapRange(hex))
 			return;
 
-		boolean imageDrawn = false;
+		if (s.mapdoc.getElementById("hex_group_"+hex.getHexNoStr()) != null) {
+			return;
+		}
 
         // required to stop aliased background bleed through hex sides
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -310,14 +314,9 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 //      g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 //      g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-		Element hexGroup = s.createElementNS(this.svgNS, "g");
-		hexGroup.setAttributeNS(null,"ID", "hex_group_"+hex.getHexNoStr());
-		hexGroup.setIdAttributeNS(null, "ID", true);
-		
-		
-		Element svghex = s.createElementNS(this.svgNS, "polygon");
-		svghex.setAttributeNS(null,"ID", "hex_"+hex.getHexNoStr());
-		svghex.setIdAttributeNS(null, "ID", true);
+		SVGElement hexGroup = s.createGroup("hex_group_"+hex.getHexNoStr(), "baseMap");
+				
+		SVGElement svghex = s.createElementWithId("polygon", "hex_"+hex.getHexNoStr());
 		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
 		
 		if (this.useTexture) {
@@ -327,39 +326,36 @@ public class DefaultHexRenderer extends SVGRenderer implements ApplicationListen
 		svghex.setAttributeNS(null, "fill", "#"+Integer.toHexString(getColor(hex).getRGB()).substring(2));
 		svghex.setAttributeNS(null, "stroke", "#000000");
 
-		//Element svgRoot = s.getDocumentElement();
-		Element baseMap = s.getElementById("baseMap");
 		hexGroup.appendChild(svghex);
 		
-		Element bridgesFords = s.getElementById("bridgesFords");
+		Element bridgesFords = s.mapdoc.getElementById("bridgesFords");
 		
 		
 		for (HexSideEnum side : HexSideEnum.values()) {
 			Collection<HexSideElementEnum> elements = hex.getHexSideElements(side);
 			if (elements.size() > 0) {
 				if (elements.contains(HexSideElementEnum.MajorRiver)) {
-					renderMajorRiver(s, hexGroup, side, x, y);
+					renderMajorRiver(s.mapdoc, hexGroup, side, x, y);
 				} else if (elements.contains(HexSideElementEnum.MinorRiver)) {
-					renderMinorRiver(s, hexGroup, side, x, y);
+					renderMinorRiver(s.mapdoc, hexGroup, side, x, y);
 				}
 				;
 				if (elements.contains(HexSideElementEnum.Road)) {
-					renderRoad(s, hexGroup, side, x, y);
+					renderRoad(s.mapdoc, hexGroup, side, x, y);
 				}
 				;
 				if (elements.contains(HexSideElementEnum.Bridge)) {
-					renderBridge(s, bridgesFords, side, x, y);
+					renderBridge(s.mapdoc, bridgesFords, side, x, y);
 				}
 				;
 				if (elements.contains(HexSideElementEnum.Ford)) {
-					renderFord(s, bridgesFords, side, x, y);
+					renderFord(s.mapdoc, bridgesFords, side, x, y);
 				}
 				;
 
 			}
 		}
-		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		baseMap.appendChild(hexGroup);
+
 	}
 
 	public void setTerrainColor(HexTerrainEnum terrain, Color c) {

@@ -1,6 +1,7 @@
 package org.joverseer.ui.map.renderers;
 
 import org.joverseer.metadata.domain.Hex;
+import org.joverseer.ui.map.JOSVGMap;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
 
@@ -31,7 +32,7 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
     }
     
     @Override
-	public void render(Object obj, SVGDocument s, int x, int y) {
+	public void render(Object obj, JOSVGMap s, int x, int y) {
         if (!appliesTo(obj)) {
             throw new IllegalArgumentException(obj.toString());
         }
@@ -47,7 +48,7 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
         x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2 + x;
         y = this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 4 + y;
  
-        Element t = s.createElementNS(this.svgNS, "text");
+        Element t = s.mapdoc.createElementNS(this.svgNS, "text");
         t.setAttributeNS(null, "x", ""+x);
         t.setAttributeNS(null, "y", ""+y);
         //t.setAttributeNS(null, "text-anchor", "middle");
@@ -58,7 +59,7 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
         
         t.setTextContent(hexNo);
         
-        Element mapLabels = s.getElementById("mapLabels");
+        Element mapLabels = s.mapdoc.getElementById("mapLabels");
         mapLabels.appendChild(t);
         
         

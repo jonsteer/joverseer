@@ -3,6 +3,7 @@ package org.joverseer.ui.map.renderers;
 import java.awt.Graphics2D;
 
 import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.joverseer.ui.map.JOSVGMap;
 import org.joverseer.ui.map.MapMetadata;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
@@ -32,7 +33,7 @@ public abstract class AbstractBaseRenderer implements Renderer {
 	}
 
     @Override
-	public void render(Object obj, SVGDocument s, int x, int y) {
+	public void render(Object obj, JOSVGMap s, int x, int y) {
     	//Not used for Image
     }	
     
