@@ -140,6 +140,41 @@ public class JOSVGMap {
 		symbol.appendChild(path);
 		this.defs.appendChild(symbol);			
 		
+		
+		//Tower
+		symbol = this.createSymbol("tower", "18", "24", "-9", "-14");
+		path = this.createPath("M1,24 L1,0 L7,0 L7,4 L10,4 L10,0 L16,0 L16,24 z",
+											"stroke:black; fill:lightgray; stroke-width:1");	
+		symbol.appendChild(path);
+		this.defs.appendChild(symbol);		
+		
+		//Fort
+		symbol = this.createSymbol("fort", "26", "24", "-13", "-14");
+		path = this.createPath("M0,24 L0,0 L6,0 L6,4 L9,4 L9,0 L16,0 L16,4 L19,4 L19,0 L25,0 L25,24 z",
+											"stroke:black; fill:lightgray; stroke-width:1");	
+		symbol.appendChild(path);
+		this.defs.appendChild(symbol);
+		
+		//Castle
+		symbol = this.createSymbol("castle", "36", "24", "-18", "-14");
+		path = this.createPath("M0,24 L0,0 L7,0 L7,4 L9,4 L9,0 L16,0 L16,4 L19,4 L19,0 L26,0 L26,4 L28,4 L28,0 L35,0 L35,24 z",
+											"stroke:black; fill:lightgray; stroke-width:1");	
+		symbol.appendChild(path);
+		this.defs.appendChild(symbol);		
+		
+		//Keep
+		symbol = this.createSymbol("keep", "47", "24", "-23", "-14");
+		path = this.createPath("M0,24 v -24 h 7 v 4 h 2.5 v -4 h 7 v 4 h 3 v-4 h 7 v 4 h 3 v -4 h 7 v 4 h 2.5 v -4 h 7 v 24 z",
+											"stroke:black; fill:lightgray; stroke-width:1");	
+		symbol.appendChild(path);
+		this.defs.appendChild(symbol);	
+		
+		//Citadel
+		symbol = this.createSymbol("citadel", "56", "24", "-28", "-14");
+		path = this.createPath("M0,24 v -24 h 6 v 4 h 3 v -4 h 7 v 4 h 3 v -4 h 7 v 4 h 3 v -4 h 7 v 4 h 3 v -4 h 7 v 4 h 3 v -4 h 6 v 24 z",
+											"stroke:black; fill:lightgray; stroke-width:1");	
+		symbol.appendChild(path);
+		this.defs.appendChild(symbol);	
 	}
 
 	public void setupStyleSheet() {

@@ -50,15 +50,28 @@ public class PopulationCenterRenderer extends SVGRenderer {
 
         PopulationCenter popCenter = (PopulationCenter)obj;
 
-//        BufferedImage fortImage = null;
-//        if (popCenter.getFortification() != FortificationSizeEnum.none) {
-//            fortImage = getImage(popCenter.getFortification().toString() + ".image");
-//        }
-
 
         Point hexCenter = new Point(x + this.mapMetadata.getHexSize() / 2 * this.mapMetadata.getGridCellWidth(),
                                     y + this.mapMetadata.getHexSize() / 2 * this.mapMetadata.getGridCellHeight());
 
+        String fortlevel = null;
+        if (popCenter.getFortification() != FortificationSizeEnum.none) {
+            fortlevel = popCenter.getFortification().toString();
+
+            Element fortElement = s.mapdoc.createElementNS(this.svgNS, "use");
+            fortElement.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#"+fortlevel);
+            fortElement.setAttributeNS(null, "x", ""+hexCenter.x);
+            fortElement.setAttributeNS(null, "y", ""+hexCenter.y);
+            fortElement.setAttributeNS(null, "id", "fort_"+popCenter.getHexNo());
+            
+            Element popCenters = s.mapdoc.getElementById("popCenters");
+            popCenters.appendChild(fortElement);   
+            
+        }
+
+     
+        
+        
         // docks
 //        if (popCenter.getHarbor() != HarborSizeEnum.none) {
 //            BufferedImage dockImage = getImage(popCenter.getHarbor().toString() + ".icon");
