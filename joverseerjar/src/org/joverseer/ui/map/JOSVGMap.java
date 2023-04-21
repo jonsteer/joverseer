@@ -56,6 +56,28 @@ public class JOSVGMap {
 		return symbol;
 	}
 	
+	public SVGElement createPattern(String id, String width, String height, String transform, String units) {
+		SVGElement s = (SVGElement) this.mapdoc.createElementNS(this.svgNS, "pattern");
+		s.setAttributeNS(null, "id", id);
+		s.setAttributeNS(null, "width", width);
+		s.setAttributeNS(null, "height", height);
+		s.setAttributeNS(null, "patternTransform", transform);
+		s.setAttributeNS(null, "patternUnits", units);
+		
+		return s;
+	}	
+	
+	public SVGElement createLine(String x1, String y1, String x2, String y2, String style) {
+		SVGElement s = (SVGElement) this.mapdoc.createElementNS(this.svgNS, "line");
+		s.setAttributeNS(null, "style", style);
+		s.setAttributeNS(null, "x1", x1);
+		s.setAttributeNS(null, "y1", y1);
+		s.setAttributeNS(null, "x2", x2);
+		s.setAttributeNS(null, "y2", y2);
+		
+		return s;
+	}	
+	
 	public SVGElement createPath(String d, String style) {
 		SVGElement path = (SVGElement) this.mapdoc.createElementNS(this.svgNS, "path");
 		path.setAttributeNS(null, "d", d);
@@ -175,6 +197,13 @@ public class JOSVGMap {
 											"stroke:black; fill:lightgray; stroke-width:1");	
 		symbol.appendChild(path);
 		this.defs.appendChild(symbol);	
+		
+		//Hatched Pattern
+		SVGElement pattern = this.createPattern("diagonalHatch", "5", "5", "rotate(45 0 0)", "userSpaceOnUse");
+		SVGElement line = this.createLine("0", "0", "0", "5", "stroke:black; stroke-width:1");
+		
+		pattern.appendChild(line);
+		this.defs.appendChild(pattern);			
 	}
 
 	public void setupStyleSheet() {
@@ -190,4 +219,5 @@ public class JOSVGMap {
 		this.addStyle(".hexnumber { font: bold 12px sans-serif; fill: black; text-anchor: middle; }");
 	
 	}
+
 }

@@ -110,11 +110,18 @@ public class PopulationCenterRenderer extends SVGRenderer {
     		standardHiddenPopcenter = false;
     	}
         if (popCenter.getHidden() && standardHiddenPopcenter) {
- //       	makeHidden(img, color1, color2);
+        	//Add another pc with hatched pattern
+        	
+            pcElement = s.mapdoc.createElementNS(this.svgNS, "use");
+            pcElement.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#"+pcCode);
+            pcElement.setAttributeNS(null, "x", ""+hexCenter.x);
+            pcElement.setAttributeNS(null, "y", ""+hexCenter.y);
+            pcElement.setAttributeNS(null, "id", "hidepop_"+popCenter.getHexNo());
+            
+            pcElement.setAttributeNS(null, "style", "fill: url(#diagonalHatch);");
+            popCenters.appendChild(pcElement);
         }
- //       if (fortImage != null) {
- //           g.drawImage(fortImage, hexCenter.x - fortImage.getWidth() / 2, hexCenter.y - fortImage.getHeight(null) + pcImage.getHeight(null) / 2 , null);
- //       }
+
             
  //      int px = hexCenter.x - pcImage.getWidth(null) / 2;
  //       int py = hexCenter.y - pcImage.getHeight(null) / 2;
