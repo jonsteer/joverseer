@@ -73,6 +73,12 @@
 			<include name="flatlaf-3.0.jar" />
 		</fileset>
 	</path>
+	<path id="batik.path">
+		<fileset dir="${lib}">
+			<include name="batik*.jar" />
+			<include name="xml*.jar" />
+		</fileset>
+	</path>	
 	<property name="junit.path">${lib}/junit-4.12.jar</property>
 	<!-- needed to run junit4 -->
 	<property name="hamcrest.path">${lib}/hamcrest-core-1.3.jar</property>
@@ -122,6 +128,7 @@
 				<path refid="pdfbox.path" />
 				<path refid="jgoodies.path" />
 				<path refid="flatLAF.path"/>
+				<path refid="batik.path" />
 				<pathelement location="${commons_httpclient.path}" />
 				<pathelement location="${log4j.path}" />
 				<pathelement location="${commons_logging.path}" />
@@ -150,6 +157,7 @@
 				<path refid="pdfbox.path" />
 				<path refid="jgoodies.path" />
 				<path refid="flatLAF.path"/>
+				<path refid="batik.path" />
 				<path refid="assertj.path" />
 				<pathelement location="${jarfile}" />
 				<pathelement location="${commons_httpclient.path}" />

@@ -278,7 +278,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		this.map.createGroup("baseMap");
 		this.map.createGroup("bridgesFords");
 		this.map.createGroup("popCenters");
-		this.map.createGroup("mapLabels");
+		this.map.createGroup("hexInfo");
+		this.map.createGroup("mapLabels");	
 		
 		refreshRendersConfig();
 

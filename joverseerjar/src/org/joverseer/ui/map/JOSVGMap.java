@@ -203,6 +203,13 @@ public class JOSVGMap {
 		SVGElement line = this.createLine("0", "0", "0", "5", "stroke:black; stroke-width:1");
 		
 		pattern.appendChild(line);
+		this.defs.appendChild(pattern);	
+		
+		//Hatched Pattern for fog
+		pattern = this.createPattern("diagonalHatchFog", "15", "15", "rotate(45 0 0)", "userSpaceOnUse");
+		line = this.createLine("0", "0", "0", "15", "stroke:#444444; stroke-width:2");
+		
+		pattern.appendChild(line);
 		this.defs.appendChild(pattern);			
 	}
 
@@ -217,6 +224,7 @@ public class JOSVGMap {
 		this.addStyle("line.ford { stroke: #0f2f2f; stroke-width: 6; }");
 		this.addStyle("line.bridge { stroke: #885500; stroke-width: 6; }");
 		this.addStyle(".hexnumber { font: bold 12px sans-serif; fill: black; text-anchor: middle; }");
+		this.addStyle(".fogOfWar { fill: url(#diagonalHatchFog); }");
 	
 	}
 

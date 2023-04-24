@@ -22,7 +22,10 @@ import org.joverseer.preferences.PreferenceRegistry;
 import org.joverseer.support.GameHolder;
 import org.joverseer.ui.domain.mapOptions.MapOptionValuesEnum;
 import org.joverseer.ui.domain.mapOptions.MapOptionsEnum;
+import org.joverseer.ui.map.JOSVGMap;
 import org.joverseer.ui.support.drawing.ColorPicker;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGElement;
 
 /**
  * Renders visible/invisible hexes
@@ -101,7 +104,7 @@ public class HexInfoRenderer extends DefaultHexRenderer {
     }
 
     @Override
-	public void render(Object obj, Graphics2D g, int x, int y) {
+	public void render(Object obj, JOSVGMap s, int x, int y) {
         if (!appliesTo(obj)) {
             throw new IllegalArgumentException(obj.toString());
         }
@@ -142,51 +145,55 @@ public class HexInfoRenderer extends DefaultHexRenderer {
         }
         
         boolean repaintNumber = false;
-        if (showClimate) {
-            HexInfo hexInfo = (HexInfo)game.getTurn().getContainer(TurnElementsEnum.HexInfo).findFirstByProperty("hexNo", hex.getHexNo());
-            if (hexInfo.getClimate() != null) {
-                Color climateColor = ColorPicker.getInstance().getColor("climate." + hexInfo.getClimate().toString());
-                Color transClimateColor = new Color(climateColor.getRed(), climateColor.getBlue(), climateColor.getGreen(), 100);
-                int radius = this.mapMetadata.getGridCellWidth() * 2;
-                int cx = x + this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2;
-                int cy = y + this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 2;
-                Ellipse2D.Float el = new Ellipse2D.Float(cx - radius / 2, cy - radius / 2, radius, radius);
-                g.setColor(transClimateColor);
-                g.fill(el);
-                repaintNumber = true;
-            }
-        }
+//        if (showClimate) {
+//            HexInfo hexInfo = (HexInfo)game.getTurn().getContainer(TurnElementsEnum.HexInfo).findFirstByProperty("hexNo", hex.getHexNo());
+//            if (hexInfo.getClimate() != null) {
+//                Color climateColor = ColorPicker.getInstance().getColor("climate." + hexInfo.getClimate().toString());
+//                Color transClimateColor = new Color(climateColor.getRed(), climateColor.getBlue(), climateColor.getGreen(), 100);
+//                int radius = this.mapMetadata.getGridCellWidth() * 2;
+//                int cx = x + this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2;
+//                int cy = y + this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 2;
+//                Ellipse2D.Float el = new Ellipse2D.Float(cx - radius / 2, cy - radius / 2, radius, radius);
+//                g.setColor(transClimateColor);
+//                g.fill(el);
+//                repaintNumber = true;
+//            }
+//        }
         if (!visible) {
-        	if (simpleColors) {
-        		Font f = new Font(this.fontName, this.fontStyle, this.fontSize);
-        		int w = ((Number)f.getStringBounds("0000", g.getFontRenderContext()).getWidth()).intValue();
-        		x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() + x - w / 2;
-                y = this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 4 + y + 8;
+//        	if (simpleColors) {
+//        		Font f = new Font(this.fontName, this.fontStyle, this.fontSize);
+//        		int w = ((Number)f.getStringBounds("0000", g.getFontRenderContext()).getWidth()).intValue();
+//        		x = this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() + x - w / 2;
+//                y = this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 4 + y + 8;
+//
+//        		g.setFont(f);
+//        		if (hex.getTerrain() == HexTerrainEnum.mountains ||
+//        				hex.getTerrain() == HexTerrainEnum.forest ||
+//        				hex.getTerrain() == HexTerrainEnum.hillsNrough ||
+//        				hex.getTerrain() == HexTerrainEnum.swamp ||
+//        				hex.getTerrain() == HexTerrainEnum.sea ||
+//        				hex.getTerrain() == HexTerrainEnum.ocean) {
+//        			g.setColor(Color.decode("#DDDDDD"));
+//        		} else {
+//        			g.setColor(Color.gray);
+//        		}
+//                g.drawString("x", x, y);
+//        	} else {
 
-        		g.setFont(f);
-        		if (hex.getTerrain() == HexTerrainEnum.mountains ||
-        				hex.getTerrain() == HexTerrainEnum.forest ||
-        				hex.getTerrain() == HexTerrainEnum.hillsNrough ||
-        				hex.getTerrain() == HexTerrainEnum.swamp ||
-        				hex.getTerrain() == HexTerrainEnum.sea ||
-        				hex.getTerrain() == HexTerrainEnum.ocean) {
-        			g.setColor(Color.decode("#DDDDDD"));
-        		} else {
-        			g.setColor(Color.gray);
-        		}
-                g.drawString("x", x, y);
-        	} else {
-        		Image img1 = getImage();
-            	g.drawImage(img1, x, y, null);
-            	repaintNumber = true;
-        	}
+    		SVGElement svghex = s.createElementWithId("polygon", "fog_"+hex.getHexNoStr());
+    		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
+    		svghex.setAttributeNS(null, "class", "fogOfWar");
+    		
+    		s.mapdoc.getElementById("hexInfo").appendChild(svghex);
+        	
+//        	}
         }
         
-        if (repaintNumber) {
-            if (getHexNumberRenderer() != null) {
-                getHexNumberRenderer().render(hex, g, x, y);
-            }
-        }
+//        if (repaintNumber) {
+//            if (getHexNumberRenderer() != null) {
+//                getHexNumberRenderer().render(hex, g, x, y);
+//            }
+//        }
     }
 
     public Renderer getHexNumberRenderer() {
