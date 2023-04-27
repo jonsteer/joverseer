@@ -145,20 +145,27 @@ public class HexInfoRenderer extends DefaultHexRenderer {
         }
         
         boolean repaintNumber = false;
-//        if (showClimate) {
-//            HexInfo hexInfo = (HexInfo)game.getTurn().getContainer(TurnElementsEnum.HexInfo).findFirstByProperty("hexNo", hex.getHexNo());
-//            if (hexInfo.getClimate() != null) {
-//                Color climateColor = ColorPicker.getInstance().getColor("climate." + hexInfo.getClimate().toString());
-//                Color transClimateColor = new Color(climateColor.getRed(), climateColor.getBlue(), climateColor.getGreen(), 100);
-//                int radius = this.mapMetadata.getGridCellWidth() * 2;
-//                int cx = x + this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2;
-//                int cy = y + this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 2;
+        if (showClimate) {
+            HexInfo hexInfo = (HexInfo)game.getTurn().getContainer(TurnElementsEnum.HexInfo).findFirstByProperty("hexNo", hex.getHexNo());
+            if (hexInfo.getClimate() != null) {
+                Color climateColor = ColorPicker.getInstance().getColor("climate." + hexInfo.getClimate().toString());
+                Color transClimateColor = new Color(climateColor.getRed(), climateColor.getBlue(), climateColor.getGreen(), 100);
+                int radius = this.mapMetadata.getGridCellWidth() * 2;
+                int cx = x + this.mapMetadata.getGridCellWidth() * this.mapMetadata.getHexSize() / 2;
+                int cy = y + this.mapMetadata.getGridCellHeight() * this.mapMetadata.getHexSize() / 2;
 //                Ellipse2D.Float el = new Ellipse2D.Float(cx - radius / 2, cy - radius / 2, radius, radius);
 //                g.setColor(transClimateColor);
 //                g.fill(el);
 //                repaintNumber = true;
-//            }
-//        }
+                SVGElement climateCircle = s.createElementWithId("circle", "climate_"+hex.getHexNoStr());
+                climateCircle.setAttributeNS(null, "cx", ""+cx);
+                climateCircle.setAttributeNS(null, "cy", ""+cy);
+                climateCircle.setAttributeNS(null, "r", ""+radius);
+                climateCircle.setAttributeNS(null, "class", "climate climate_"+hexInfo.getClimate().toString());
+                climateCircle.setAttributeNS(null, "style", "fill-opacity: .5; fill: #"+Integer.toHexString(climateColor.getRGB()).substring(2));
+                s.mapdoc.getElementById("hexInfo").appendChild(climateCircle);
+            }
+        }
         if (!visible) {
 //        	if (simpleColors) {
 //        		Font f = new Font(this.fontName, this.fontStyle, this.fontSize);
