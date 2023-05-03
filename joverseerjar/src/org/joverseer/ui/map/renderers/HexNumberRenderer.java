@@ -54,6 +54,7 @@ public class HexNumberRenderer extends AbstractBaseRenderer {
         //t.setAttributeNS(null, "text-anchor", "middle");
         
         t.setAttributeNS(null, "class", "hexnumber");
+        
         //TODO replace style with stylesheet
         //t.setAttributeNS(null, "style", "font: bold "+this.fontSize+"px sans-serif; fill: black;");
         

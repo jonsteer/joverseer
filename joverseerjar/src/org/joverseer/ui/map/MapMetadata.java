@@ -20,6 +20,10 @@ public class MapMetadata {
 	int maxMapRow;
 	int minMapColumn = 1;
 	int minMapRow = 1;
+	
+	//metrics for SVG Map
+	int fullHexSize = 96;
+	int markerSize = 5;
 
 	ArrayList<Renderer> renderers = new ArrayList<Renderer>();
 
@@ -48,6 +52,14 @@ public class MapMetadata {
 	public void setHexSize(int hexSize) {
 		this.hexSize = hexSize;
 	}
+	
+	public int getFullHexSize() {
+		return this.fullHexSize;
+	}
+	
+	public int getMarkerSize() {
+		return this.markerSize;
+	}	
 
 	public int getMaxMapColumn() {
 		return this.maxMapColumn;

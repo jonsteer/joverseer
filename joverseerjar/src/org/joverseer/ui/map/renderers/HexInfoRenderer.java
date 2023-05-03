@@ -166,6 +166,15 @@ public class HexInfoRenderer extends DefaultHexRenderer {
                 s.mapdoc.getElementById("hexInfo").appendChild(climateCircle);
             }
         }
+        
+        SVGElement svghex = (SVGElement) s.mapdoc.getElementById("info_"+hex.getHexNoStr());
+        boolean newHex = false;
+        
+        if (svghex == null) {
+        	newHex = true;
+        	svghex = s.createElementWithId("polygon", "info_"+hex.getHexNoStr());
+        }
+        
         if (!visible) {
 //        	if (simpleColors) {
 //        		Font f = new Font(this.fontName, this.fontStyle, this.fontSize);
@@ -187,13 +196,20 @@ public class HexInfoRenderer extends DefaultHexRenderer {
 //                g.drawString("x", x, y);
 //        	} else {
 
-    		SVGElement svghex = s.createElementWithId("polygon", "fog_"+hex.getHexNoStr());
     		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
     		svghex.setAttributeNS(null, "class", "fogOfWar");
-    		
-    		s.mapdoc.getElementById("hexInfo").appendChild(svghex);
-        	
+    		        	
 //        	}
+        }
+        else {
+        	//visible so just set the placeholder
+
+    		svghex.setAttributeNS(null, "points", (this.xPoints[0] + x) + "," + (this.yPoints[0] + y) + " " + (this.xPoints[1] + x) + "," + (this.yPoints[1] + y) + " " + (this.xPoints[2] + x) + "," + (this.yPoints[2] + y) + " " + (this.xPoints[3] + x) + "," + (this.yPoints[3] + y) + " " + (this.xPoints[4] + x) + "," + (this.yPoints[4] + y) + " " + (this.xPoints[5] + x) + "," + (this.yPoints[5] + y));
+    		svghex.setAttributeNS(null, "class", "visible");
+        }
+        
+        if (newHex) {
+        	s.mapdoc.getElementById("hexInfo").appendChild(svghex);
         }
         
 //        if (repaintNumber) {

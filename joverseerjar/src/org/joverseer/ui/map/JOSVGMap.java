@@ -78,6 +78,17 @@ public class JOSVGMap {
 		return s;
 	}	
 	
+	public SVGElement createRect(String x, String y, String width, String height, String style) {
+		SVGElement s = (SVGElement) this.mapdoc.createElementNS(this.svgNS, "rect");
+		s.setAttributeNS(null, "style", style);
+		s.setAttributeNS(null, "x", x);
+		s.setAttributeNS(null, "y", y);
+		s.setAttributeNS(null, "width", width);
+		s.setAttributeNS(null, "height", height);
+		
+		return s;		
+	}
+	
 	public SVGElement createPath(String d, String style) {
 		SVGElement path = (SVGElement) this.mapdoc.createElementNS(this.svgNS, "path");
 		path.setAttributeNS(null, "d", d);
@@ -223,9 +234,20 @@ public class JOSVGMap {
 		this.addStyle("line.minorRiver { stroke: #008adf; stroke-width: 3; }");
 		this.addStyle("line.ford { stroke: #0f2f2f; stroke-width: 6; }");
 		this.addStyle("line.bridge { stroke: #885500; stroke-width: 6; }");
-		this.addStyle(".hexnumber { font: bold 12px sans-serif; fill: black; text-anchor: middle; }");
+		this.addStyle(".hexnumber { font-size: 12px; font-family: sans-serif; font-weight: bold; fill: black; text-anchor: middle; }");
 		this.addStyle(".fogOfWar { fill: url(#diagonalHatchFog); }");
+		this.addStyle(".visible { fill: none }");
+		this.addStyle(".selectedHex { stroke: yellow; }");
 	
+	}
+	
+	public void addClassToElement(SVGElement e, String c) {
+		if (e.hasAttributeNS(null, c)) {
+			
+		}
+		else {
+			e.setAttributeNS(null, "class", c);
+		}
 	}
 
 }

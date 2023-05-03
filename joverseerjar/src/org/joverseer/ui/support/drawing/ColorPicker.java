@@ -109,6 +109,18 @@ public class ColorPicker implements ApplicationListener {
         }
         return (Color)this.colors.get(color);
     }
+    
+    public String getHexColor(String color) {
+    	return "#" + Integer.toHexString(this.getColor(color).getRGB()).substring(2);
+    }
+    
+    public String getHexColor1(int nationNo) {
+    	return "#" + Integer.toHexString(this.getColor1(nationNo).getRGB()).substring(2);
+    }
+    
+    public String getHexColor2(int nationNo) {
+    	return "#" + Integer.toHexString(this.getColor2(nationNo).getRGB()).substring(2);
+    }    
 
     @Override
 	public void onApplicationEvent(ApplicationEvent applicationEvent) {

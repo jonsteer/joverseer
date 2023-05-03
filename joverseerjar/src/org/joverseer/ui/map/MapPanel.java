@@ -35,6 +35,7 @@ import javax.swing.event.MouseInputListener;
 import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.svg.JSVGComponent;
 import org.apache.log4j.Logger;
 import org.joverseer.JOApplication;
 import org.joverseer.domain.Army;
@@ -80,6 +81,7 @@ import org.springframework.richclient.progress.BusyIndicator;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.svg.SVGDefsElement;
 import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGElement;
 import org.w3c.dom.svg.SVGStyleElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -166,7 +168,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		_instance = this;
 		this.gameHolder = gameHolder;
 		
-		this.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+		this.setDocumentState(JSVGComponent.ALWAYS_DYNAMIC);
 	}
 
 	public static MapPanel instance() {
@@ -267,7 +269,8 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		// Set the width and height attributes on the root 'svg' element.
 		//svgRoot.setAttributeNS(null, "width", d.getWidth()+"");
 		//svgRoot.setAttributeNS(null, "height", d.getHeight()+"");	
-		svgRoot.setAttributeNS(null, "viewBox", "0 0 "+d.getWidth()+" "+d.getHeight());	
+		svgRoot.setAttributeNS(null, "viewBox", "0 0 "+d.getWidth()+" "+d.getHeight());
+		svgRoot.setAttributeNS(null, "text-rendering","optimizeLegibility");
 		//this.mapBack = new BufferedImage((int) d.getWidth(), (int) d.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		this.setPreferredSize(d);
 		this.setSize(d);
@@ -280,7 +283,10 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 
 		this.map.createGroup("hexInfo");
 		this.map.createGroup("popCenters");
-		this.map.createGroup("mapLabels");	
+		SVGElement mapLabels = this.map.createGroup("mapLabels");	
+		mapLabels.setAttributeNS(null, "text-rendering","optimizeLegibility");
+		
+		this.setSVGDocument(this.map.mapdoc);			
 		
 		refreshRendersConfig();
 
@@ -302,7 +308,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 			}
 		}
 		
-		this.setSVGDocument(this.map.mapdoc);		
+	
 	}
 	public static void saveSvgDocumentToFile(SVGDocument document, File file)
 	        throws FileNotFoundException, IOException {
@@ -445,23 +451,23 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		} catch (Exception exc) {
 			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
 		}
-//
-//		try {
-//			for (Character c1 : getGame().getTurn().getCharacters()) {
-//				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
-//					if (r.appliesTo(c1)) {
-//						setHexLocation(c1.getX(), c1.getY());
-//						try {
-//							r.render(c1, g, this.location.x, this.location.y);
-//						} catch (Exception exc) {
-//							logger.error("Error rendering character " + c1.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-//						}
-//					}
-//				}
-//			}
-//		} catch (Exception exc) {
-//			logger.error("Error rendering pop centers " + exc.getMessage()); //$NON-NLS-1$
-//		}
+
+		try {
+			for (Character c1 : getGame().getTurn().getCharacters()) {
+				for (org.joverseer.ui.map.renderers.Renderer r : metadata1.getRenderers()) {
+					if (r.appliesTo(c1)) {
+						setHexLocation(c1.getX(), c1.getY());
+						try {
+							r.render(c1, this.map, this.location.x, this.location.y);
+						} catch (Exception exc) {
+							logger.error("Error rendering character " + c1.getName() + " " + exc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+					}
+				}
+			}
+		} catch (Exception exc) {
+			logger.error("Error rendering characters " + exc.getMessage()); //$NON-NLS-1$
+		}
 //
 //		try {
 //			for (Army army : getGame().getTurn().getArmies()) {
@@ -662,6 +668,7 @@ public class MapPanel extends JSVGCanvas implements MouseInputListener, MouseWhe
 		if (selectedHex == null || (selectedHex.x == 0 && selectedHex.y == 0))
 			return;
 		if (this.selectedHex == null || selectedHex.x != this.selectedHex.x || selectedHex.y != this.selectedHex.y) {
+
 			this.selectedHex = selectedHex;
 			// fireMyEvent(new SelectedHexChangedEvent(this));
 			JOApplication.publishEvent(LifecycleEventsEnum.SelectedHexChangedEvent, selectedHex, this);
