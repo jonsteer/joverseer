@@ -99,22 +99,14 @@ public class MultiCharacterRenderer extends AbstractBaseRenderer {
         if (dragon && !simpleColors) {
         	color1 = ColorPicker.getInstance().getHexColor("dragon");
         }
-        
-        //g.setColor(color1);
-        //g.fillRect(x + dx, y + dy, w, h);
 
         int cx = x + dx + (w * ii);
         int cy = y + dy + (h * jj);
-//        RoundRectangle2D.Float e = new RoundRectangle2D.Float(cx, cy, w, h, w/5*2, h/5*2);
-//        g.fill(e);
-//
-//        g.setColor(color2);
-//        //g.drawRect(x + dx, y + dy, w, h);
-//        g.draw(e);
-//        if (c.getDeathReason() != CharacterDeathReasonEnum.NotDead) {
-//            g.drawLine((int)e.getBounds().getX(), (int)e.getBounds().getY(), 
-//                    (int)e.getBounds().getMaxX(), (int)e.getBounds().getMaxY());
-//        }
+
+        if (c.getDeathReason() != CharacterDeathReasonEnum.NotDead) {
+            SVGElement cline = s.createLine(""+cx, ""+cy, ""+cx+w, ""+cy+h, "stroke:"+color2+";");
+            s.mapdoc.getElementById("hexInfo").appendChild(cline);
+        }
         
         SVGElement marker = s.createRect(""+cx, ""+cy, ""+w, ""+h, "fill: "+color1+"; stroke:"+color2+";");
         marker.setAttributeNS(null, "rx", "2");
@@ -123,9 +115,6 @@ public class MultiCharacterRenderer extends AbstractBaseRenderer {
         
         
         if (dragon && !simpleColors) {
-//        	g.setColor(color2);
-//        	Rectangle2D.Float ee = new Rectangle2D.Float(cx+2, cy+2, w-2, h-2);
-//            g.fill(ee);
             SVGElement marker2 = s.createRect(""+(cx+2), ""+(cy+2), ""+(w-2), ""+(h-2), "fill: "+color2+"; stroke:"+color2+"; stroke-width:0");
             s.mapdoc.getElementById("hexInfo").appendChild(marker2);
             
