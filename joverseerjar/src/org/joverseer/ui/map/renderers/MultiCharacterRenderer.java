@@ -102,17 +102,17 @@ public class MultiCharacterRenderer extends AbstractBaseRenderer {
 
         int cx = x + dx + (w * ii);
         int cy = y + dy + (h * jj);
-
-        if (c.getDeathReason() != CharacterDeathReasonEnum.NotDead) {
-            SVGElement cline = s.createLine(""+cx, ""+cy, ""+cx+w, ""+cy+h, "stroke:"+color2+";");
-            s.mapdoc.getElementById("hexInfo").appendChild(cline);
-        }
         
         SVGElement marker = s.createRect(""+cx, ""+cy, ""+w, ""+h, "fill: "+color1+"; stroke:"+color2+";");
         marker.setAttributeNS(null, "rx", "2");
         marker.setAttributeNS(null, "ry", "2");
         s.mapdoc.getElementById("hexInfo").appendChild(marker);
         
+
+        if (c.getDeathReason() != CharacterDeathReasonEnum.NotDead) {
+            SVGElement cline = s.createLine(""+cx, ""+cy, ""+(cx+w), ""+(cy+h), "stroke:"+color2+";");
+            s.mapdoc.getElementById("hexInfo").appendChild(cline);
+        }        
         
         if (dragon && !simpleColors) {
             SVGElement marker2 = s.createRect(""+(cx+2), ""+(cy+2), ""+(w-2), ""+(h-2), "fill: "+color2+"; stroke:"+color2+"; stroke-width:0");
